@@ -1,0 +1,16 @@
+[
+  {"id": "first_meeting", "title": "첫 회의", "description": "첫 번째 회의를 완료했습니다", "icon": "🎉"},
+  {"id": "meeting_10", "title": "회의 10회", "description": "10번의 회의를 완료했습니다", "icon": "📊"},
+  {"id": "meeting_50", "title": "회의 마스터", "description": "50번의 회의를 완료했습니다", "icon": "🏆"},
+  {"id": "level_5", "title": "회의 숙련자", "description": "레벨 5에 도달했습니다", "icon": "⭐"},
+  {"id": "level_10", "title": "경영 참모", "description": "레벨 10에 도달했습니다", "icon": "🌟"},
+  {"id": "level_20", "title": "만렙 대표", "description": "레벨 20에 도달했습니다", "icon": "👑"},
+  {"id": "s_grade", "title": "완벽한 회의", "description": "S등급을 달성했습니다", "icon": "💎"},
+  {"id": "intern_s", "title": "인턴의 역습", "description": "인턴으로 S등급을 달성했습니다", "icon": "🐣"},
+  {"id": "cards_10", "title": "카드 수집가", "description": "캐릭터 카드 10장을 모았습니다", "icon": "🃏"},
+  {"id": "cards_all", "title": "풀 수집", "description": "모든 캐릭터 카드를 수집했습니다", "icon": "🎴"},
+  {"id": "roles_5", "title": "다재다능", "description": "5개 이상의 역할을 플레이했습니다", "icon": "🎭"},
+  {"id": "roles_all", "title": "만능 직원", "description": "20개 이상의 역할을 플레이했습니다", "icon": "🦸"},
+  {"id": "gacha_10", "title": "가챠 입문", "description": "가챠를 10회 뽑았습니다", "icon": "🎰"},
+  {"id": "gacha_50", "title": "가챠 중독자", "description": "가챠를 50회 뽑았습니다", "icon": "💸"}
+]

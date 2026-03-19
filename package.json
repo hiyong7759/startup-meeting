@@ -1,0 +1,19 @@
+{
+  "name": "startup-meeting",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "dev": "pnpm --filter @startup-meeting/web dev",
+    "server": "pnpm --filter @startup-meeting/server dev",
+    "dev:all": "pnpm server & pnpm dev"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

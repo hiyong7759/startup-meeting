@@ -1,0 +1,148 @@
+[
+  {
+    "id": "event-001",
+    "title": "프로덕션 서버 장애",
+    "description": "슬랙 알림: '프로덕션 서버 응답시간 3초 넘었습니다'",
+    "category": "internal",
+    "metricsTrigger": { "techStability": { "below": 50 } },
+    "immediateEffect": { "techStability": -5, "teamMorale": -3 }
+  },
+  {
+    "id": "event-002",
+    "title": "TechCrunch 아티클 게재",
+    "description": "해외 미디어에 우리 서비스 소개 기사가 났습니다. 트위터 멘션이 폭발하고 있습니다.",
+    "category": "external",
+    "immediateEffect": { "mau": 2000, "teamMorale": 15 }
+  },
+  {
+    "id": "event-003",
+    "title": "핵심 개발자 갑작스러운 퇴사",
+    "description": "시니어 백엔드 개발자가 개인 사정으로 갑자기 퇴사 의사를 밝혔습니다.",
+    "category": "internal",
+    "metricsTrigger": { "teamMorale": { "below": 60 } },
+    "immediateEffect": { "techStability": -10, "teamMorale": -12, "runway": -1 }
+  },
+  {
+    "id": "event-004",
+    "title": "VC 콜드 인바운드",
+    "description": "국내 유명 VC에서 먼저 연락이 왔습니다. 미팅을 제안했습니다.",
+    "category": "opportunity",
+    "immediateEffect": { "teamMorale": 10 }
+  },
+  {
+    "id": "event-005",
+    "title": "개인정보 유출 의심 신고",
+    "description": "유저 한 명이 자신의 이메일이 스팸 리스트에 올랐다며 신고했습니다. 내부 점검이 필요합니다.",
+    "category": "internal",
+    "metricsTrigger": { "techStability": { "below": 60 } },
+    "immediateEffect": { "mau": -800, "teamMorale": -10, "techStability": -8 }
+  },
+  {
+    "id": "event-006",
+    "title": "대기업 인수 제안",
+    "description": "대형 포털 사가 인수 의향서를 보내왔습니다. 금액은 현재 밸류에이션의 3배입니다.",
+    "category": "external",
+    "immediateEffect": { "teamMorale": 5 }
+  },
+  {
+    "id": "event-007",
+    "title": "앱스토어 피처드 선정",
+    "description": "애플 앱스토어에서 '오늘의 앱'으로 선정됐습니다. 일주일간 노출됩니다.",
+    "category": "opportunity",
+    "immediateEffect": { "mau": 4000, "teamMorale": 20 }
+  },
+  {
+    "id": "event-008",
+    "title": "팀 내 갈등 표면화",
+    "description": "CPO와 CTO 간 업무 방향성 갈등이 표면화됐습니다. 회의 분위기가 심각합니다.",
+    "category": "internal",
+    "metricsTrigger": { "teamMorale": { "below": 70 } },
+    "immediateEffect": { "teamMorale": -15, "techStability": -3 }
+  },
+  {
+    "id": "event-009",
+    "title": "경쟁사 서비스 종료 발표",
+    "description": "주요 경쟁사 중 하나가 서비스 종료를 발표했습니다. 유저들이 대안을 찾고 있습니다.",
+    "category": "external",
+    "immediateEffect": { "mau": 3000, "teamMorale": 12 }
+  },
+  {
+    "id": "event-010",
+    "title": "클라우드 비용 청구 폭탄",
+    "description": "이번 달 AWS 청구서가 예상의 4배입니다. 리소스 설정 오류로 보입니다.",
+    "category": "internal",
+    "immediateEffect": { "runway": -1, "techStability": -5, "teamMorale": -8 }
+  },
+  {
+    "id": "event-011",
+    "title": "정부 지원사업 선정",
+    "description": "중소벤처기업부 스타트업 지원사업에 선정됐습니다. 보조금 5,000만원이 나옵니다.",
+    "category": "opportunity",
+    "immediateEffect": { "runway": 3, "teamMorale": 10 }
+  },
+  {
+    "id": "event-012",
+    "title": "유명 커뮤니티 바이럴",
+    "description": "DCinside 또는 에펨코리아에서 우리 서비스 소개글이 핫게에 올랐습니다.",
+    "category": "random",
+    "immediateEffect": { "mau": 1500, "techStability": -3 }
+  },
+  {
+    "id": "event-013",
+    "title": "규제 변화 공지",
+    "description": "정부가 우리 서비스 분야에 새로운 규제를 도입한다고 발표했습니다. 6개월 내 대응 필요.",
+    "category": "external",
+    "immediateEffect": { "runway": -1, "teamMorale": -8 }
+  },
+  {
+    "id": "event-014",
+    "title": "인플루언서 자발적 홍보",
+    "description": "팔로워 50만 인플루언서가 우리 서비스를 자발적으로 소개했습니다.",
+    "category": "random",
+    "immediateEffect": { "mau": 2500, "teamMorale": 15 }
+  },
+  {
+    "id": "event-015",
+    "title": "서버 해킹 시도 탐지",
+    "description": "보안 모니터링에서 비정상적인 접근 시도가 감지됐습니다. 즉각 대응이 필요합니다.",
+    "category": "internal",
+    "metricsTrigger": { "techStability": { "below": 70 } },
+    "immediateEffect": { "techStability": -12, "teamMorale": -8 }
+  },
+  {
+    "id": "event-016",
+    "title": "대학교 공식 파트너십 제안",
+    "description": "주요 대학에서 학생 대상 무료 제공 조건으로 공식 파트너십을 제안했습니다.",
+    "category": "opportunity",
+    "immediateEffect": { "mau": 1000, "teamMorale": 8 }
+  },
+  {
+    "id": "event-017",
+    "title": "주요 오픈소스 라이브러리 보안 취약점",
+    "description": "우리가 사용하는 핵심 npm 패키지에 심각한 보안 취약점이 발견됐습니다. 즉시 패치 필요.",
+    "category": "external",
+    "immediateEffect": { "techStability": -8, "teamMorale": -5, "runway": -0.5 }
+  },
+  {
+    "id": "event-018",
+    "title": "팀원 경조사",
+    "description": "팀원 한 명이 부모님 상을 당했습니다. 갑작스러운 공백이 생겼습니다.",
+    "category": "random",
+    "immediateEffect": { "teamMorale": -5, "techStability": -3 }
+  },
+  {
+    "id": "event-019",
+    "title": "글로벌 경기침체 신호",
+    "description": "국내외 경제 지표가 악화되면서 투자 시장이 얼어붙고 있다는 뉴스가 나왔습니다.",
+    "category": "external",
+    "metricsTrigger": { "runway": { "below": 12 } },
+    "immediateEffect": { "runway": -1, "teamMorale": -10 }
+  },
+  {
+    "id": "event-020",
+    "title": "신입 인턴의 버그 발견",
+    "description": "인턴이 장기간 숨어있던 치명적 버그를 발견했습니다. 다행히 외부에 노출되기 전에 잡았습니다.",
+    "category": "random",
+    "immediateEffect": { "techStability": 8, "teamMorale": 12 }
+  }
+]

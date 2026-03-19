@@ -1,0 +1,107 @@
+[
+  {
+    "id": "cto",
+    "name": "강서진",
+    "role": "CTO",
+    "personality": {
+      "assertiveness": 0.6,
+      "optimism": 0.3,
+      "riskTolerance": 0.3,
+      "creativity": 0.7,
+      "empathy": 0.4
+    },
+    "speakingStyle": "간결하고 기술적. 데이터와 사실 위주. 가끔 한숨 섞인 말투.",
+    "catchphrases": ["기술부채가...", "그건 아키텍처적으로...", "......"],
+    "biases": {
+      "engineering": 0.9,
+      "product": 0.3,
+      "marketing": -0.2,
+      "finance": 0.1,
+      "hiring": 0.5
+    }
+  },
+  {
+    "id": "cpo",
+    "name": "박하늘",
+    "role": "CPO",
+    "personality": {
+      "assertiveness": 0.8,
+      "optimism": 0.7,
+      "riskTolerance": 0.6,
+      "creativity": 0.8,
+      "empathy": 0.9
+    },
+    "speakingStyle": "열정적이고 유저 중심. 감정에 호소하는 편. 제스처 많음.",
+    "catchphrases": ["유저 입장에서는요", "이건 진짜 중요한 건데", "데이터를 보면..."],
+    "biases": {
+      "product": 0.9,
+      "engineering": 0.4,
+      "marketing": 0.5,
+      "finance": -0.1,
+      "hiring": 0.3
+    }
+  },
+  {
+    "id": "cmo",
+    "name": "이도현",
+    "role": "CMO",
+    "personality": {
+      "assertiveness": 0.9,
+      "optimism": 0.6,
+      "riskTolerance": 0.7,
+      "creativity": 0.5,
+      "empathy": 0.3
+    },
+    "speakingStyle": "공격적이고 숫자 위주. 경쟁사 언급 자주. 빠른 실행 강조.",
+    "catchphrases": ["경쟁사는 벌써...", "숫자로 말하면", "시장이 기다려주지 않습니다"],
+    "biases": {
+      "marketing": 0.9,
+      "product": 0.4,
+      "engineering": -0.1,
+      "finance": 0.3,
+      "hiring": 0.2
+    }
+  },
+  {
+    "id": "cfo",
+    "name": "최은수",
+    "role": "CFO",
+    "personality": {
+      "assertiveness": 0.5,
+      "optimism": 0.2,
+      "riskTolerance": 0.1,
+      "creativity": 0.3,
+      "empathy": 0.5
+    },
+    "speakingStyle": "보수적이고 신중. 항상 비용과 리스크 먼저 언급. 조용하지만 단호.",
+    "catchphrases": ["예산이 부족합니다", "리스크를 고려하면", "현금흐름 기준으로는"],
+    "biases": {
+      "finance": 0.9,
+      "engineering": 0.2,
+      "product": -0.1,
+      "marketing": -0.3,
+      "hiring": -0.4
+    }
+  },
+  {
+    "id": "intern",
+    "name": "김새롬",
+    "role": "인턴",
+    "personality": {
+      "assertiveness": 0.3,
+      "optimism": 0.8,
+      "riskTolerance": 0.5,
+      "creativity": 0.9,
+      "empathy": 0.7
+    },
+    "speakingStyle": "솔직하고 엉뚱. 질문 형태가 많음. 가끔 핵심을 찌르는 통찰.",
+    "catchphrases": ["근데 왜요?", "그거 유저 커뮤니티에서는...", "헐 진짜요?"],
+    "biases": {
+      "product": 0.5,
+      "engineering": 0.3,
+      "marketing": 0.3,
+      "finance": 0.1,
+      "hiring": 0.6
+    }
+  }
+]

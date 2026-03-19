@@ -1,0 +1,310 @@
+[
+  {
+    "id": "common_001",
+    "title": "팀 점심 메뉴 결정",
+    "description": "매주 반복되는 회사 점심 메뉴 선정. 채식주의자, 알레르기, 예산을 모두 고려해야 한다.",
+    "rarity": "common",
+    "category": "operations"
+  },
+  {
+    "id": "common_002",
+    "title": "회의실 예약 시스템 개선",
+    "description": "회의실 중복 예약과 노쇼 문제가 반복되고 있다. 해결책을 논의한다.",
+    "rarity": "common",
+    "category": "operations"
+  },
+  {
+    "id": "common_003",
+    "title": "사무실 냉방 온도 조율",
+    "description": "여름마다 반복되는 냉방 온도 갈등. 추운 사람 vs 더운 사람의 끝없는 대결.",
+    "rarity": "common",
+    "category": "operations"
+  },
+  {
+    "id": "common_004",
+    "title": "주간 팀 회의 시간 조정",
+    "description": "월요일 9시 주간회의가 너무 이르다는 불만이 쌓였다. 시간 재설정 논의.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_005",
+    "title": "신규 입사자 온보딩 개선",
+    "description": "최근 입사자들이 첫 달 혼란을 겪고 있다. 온보딩 프로세스를 개선하자.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_006",
+    "title": "재택근무 정책 수립",
+    "description": "팀마다 제각각인 재택근무 정책을 통일해달라는 요청이 들어왔다.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_007",
+    "title": "사내 메신저 도구 교체",
+    "description": "슬랙 vs 팀즈 vs 디스코드. 직원들 의견이 갈린다. 하나로 통일해야 한다.",
+    "rarity": "common",
+    "category": "engineering"
+  },
+  {
+    "id": "common_008",
+    "title": "SNS 채널 콘텐츠 방향",
+    "description": "인스타그램 팔로워가 정체 상태. 콘텐츠 전략을 새로 짜야 한다.",
+    "rarity": "common",
+    "category": "marketing"
+  },
+  {
+    "id": "common_009",
+    "title": "분기별 팀 빌딩 행사 기획",
+    "description": "3분기 팀 빌딩 행사를 기획해야 한다. 예산 50만원, 반나절 일정.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_010",
+    "title": "프리랜서 vs 정직원 채용",
+    "description": "디자이너 한 명이 필요하다. 정직원으로 뽑을지 프리랜서로 쓸지 결정해야 한다.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_011",
+    "title": "고객 응대 매뉴얼 업데이트",
+    "description": "CS팀 응대 매뉴얼이 2년째 그대로다. 최신화가 필요하다.",
+    "rarity": "common",
+    "category": "operations"
+  },
+  {
+    "id": "common_012",
+    "title": "월간 뉴스레터 방향 수정",
+    "description": "월간 뉴스레터 오픈율이 15%에서 8%로 떨어졌다. 콘텐츠를 바꿔야 한다.",
+    "rarity": "common",
+    "category": "marketing"
+  },
+  {
+    "id": "common_013",
+    "title": "코드 리뷰 프로세스 표준화",
+    "description": "팀마다 코드 리뷰 기준이 다르다. 통일된 가이드라인이 필요하다.",
+    "rarity": "common",
+    "category": "engineering"
+  },
+  {
+    "id": "common_014",
+    "title": "내부 문서화 도구 선정",
+    "description": "노션 vs 컨플루언스 vs 구글 독스. 회사 공식 문서화 도구를 정해야 한다.",
+    "rarity": "common",
+    "category": "operations"
+  },
+  {
+    "id": "common_015",
+    "title": "인턴 평가 기준 마련",
+    "description": "이번 인턴 기수 평가가 다음 달이다. 공정한 평가 기준을 만들자.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "common_016",
+    "title": "앱 푸시 알림 빈도 조정",
+    "description": "사용자 푸시 알림 수신 거부율이 증가했다. 발송 빈도와 내용을 조정해야 한다.",
+    "rarity": "common",
+    "category": "product"
+  },
+  {
+    "id": "common_017",
+    "title": "경쟁사 신기능 대응 방안",
+    "description": "경쟁사가 어제 새 기능을 출시했다. 우리의 대응 방향을 논의한다.",
+    "rarity": "common",
+    "category": "product"
+  },
+  {
+    "id": "common_018",
+    "title": "광고 예산 배분 결정",
+    "description": "이번 분기 마케팅 예산 2,000만원을 채널별로 배분해야 한다.",
+    "rarity": "common",
+    "category": "marketing"
+  },
+  {
+    "id": "common_019",
+    "title": "데이터 수집 동의 팝업 개선",
+    "description": "앱 첫 실행 시 데이터 수집 동의 팝업 거부율이 70%. 개선이 필요하다.",
+    "rarity": "common",
+    "category": "product"
+  },
+  {
+    "id": "common_020",
+    "title": "야근 수당 정책 수립",
+    "description": "야근 수당 기준이 불명확하다는 직원 불만이 접수됐다. 명확한 정책이 필요하다.",
+    "rarity": "common",
+    "category": "hr"
+  },
+  {
+    "id": "uncommon_001",
+    "title": "시리즈 A 투자 유치 전략",
+    "description": "6개월 내 시리즈 A 50억 유치를 목표로 한다. IR 자료와 VC 접촉 전략을 논의한다.",
+    "rarity": "uncommon",
+    "category": "executive"
+  },
+  {
+    "id": "uncommon_002",
+    "title": "해외 시장 진출 우선순위 결정",
+    "description": "일본, 동남아, 미국 중 첫 해외 시장을 어디로 할지 결정해야 한다.",
+    "rarity": "uncommon",
+    "category": "executive"
+  },
+  {
+    "id": "uncommon_003",
+    "title": "유료 전환 모델 전환",
+    "description": "현재 무료 서비스를 프리미엄 모델로 전환하려 한다. 유저 이탈 최소화 방안을 논의한다.",
+    "rarity": "uncommon",
+    "category": "product"
+  },
+  {
+    "id": "uncommon_004",
+    "title": "신사업 부서 신설",
+    "description": "AI 사업 부서를 새로 만들지, 기존 조직에 녹일지 결정해야 한다.",
+    "rarity": "uncommon",
+    "category": "executive"
+  },
+  {
+    "id": "uncommon_005",
+    "title": "핵심 인재 이탈 방지 전략",
+    "description": "시니어 개발자 3명이 이직 의사를 비쳤다. 리텐션 패키지를 어떻게 설계할지 논의한다.",
+    "rarity": "uncommon",
+    "category": "hr"
+  },
+  {
+    "id": "uncommon_006",
+    "title": "B2B 신규 계약 조건 협상",
+    "description": "대기업 고객사와 연간 계약 협상 중. 가격, 기능, SLA 조건을 결정해야 한다.",
+    "rarity": "uncommon",
+    "category": "sales"
+  },
+  {
+    "id": "uncommon_007",
+    "title": "대규모 리팩토링 vs 신기능 개발",
+    "description": "기술 부채가 심각하다. 다음 분기를 리팩토링에 쓸지 신기능 개발에 쓸지 결정해야 한다.",
+    "rarity": "uncommon",
+    "category": "engineering"
+  },
+  {
+    "id": "uncommon_008",
+    "title": "자체 물류 vs 3PL 파트너십",
+    "description": "물류 비용이 매출의 30%를 차지한다. 직접 운영할지 외주를 줄지 결정해야 한다.",
+    "rarity": "uncommon",
+    "category": "operations"
+  },
+  {
+    "id": "uncommon_009",
+    "title": "개인정보 정책 강화 대응",
+    "description": "새 개인정보보호법 시행이 3개월 후다. 제품과 운영 전반의 대응 계획이 필요하다.",
+    "rarity": "uncommon",
+    "category": "legal"
+  },
+  {
+    "id": "uncommon_010",
+    "title": "AI 도입으로 인한 인력 구조 조정",
+    "description": "업무 자동화로 일부 직무가 중복된다. 인력 재배치 방안을 논의해야 한다.",
+    "rarity": "uncommon",
+    "category": "executive"
+  },
+  {
+    "id": "uncommon_011",
+    "title": "오픈소스 전환 결정",
+    "description": "핵심 기술 일부를 오픈소스로 공개할지 논의한다. 기여 커뮤니티 구축 vs 경쟁사 이용 리스크.",
+    "rarity": "uncommon",
+    "category": "engineering"
+  },
+  {
+    "id": "uncommon_012",
+    "title": "성과 기반 보상 체계 도입",
+    "description": "기존 연봉 체계를 성과 연동형으로 바꾸려 한다. 기준 설계와 직원 반응을 논의한다.",
+    "rarity": "uncommon",
+    "category": "hr"
+  },
+  {
+    "id": "rare_001",
+    "title": "서버 전면 장애 발생",
+    "description": "새벽 3시에 서비스 전체가 다운됐다. 5시간째 복구 중. 사용자 공지와 대응 전략을 지금 당장 결정해야 한다.",
+    "rarity": "rare",
+    "category": "engineering"
+  },
+  {
+    "id": "rare_002",
+    "title": "핵심 고객 계약 해지 위기",
+    "description": "매출의 40%를 차지하는 고객사가 계약 해지를 통보했다. 72시간 안에 대응해야 한다.",
+    "rarity": "rare",
+    "category": "sales"
+  },
+  {
+    "id": "rare_003",
+    "title": "개인정보 유출 사고 대응",
+    "description": "사용자 10만 명의 개인정보가 유출됐다. 신고 의무, 사용자 공지, 법적 대응을 즉시 결정해야 한다.",
+    "rarity": "rare",
+    "category": "legal"
+  },
+  {
+    "id": "rare_004",
+    "title": "핵심 팀원 갑작스러운 퇴사",
+    "description": "개발팀 핵심 엔지니어가 오늘 갑자기 퇴사 통보를 했다. 지식 이전과 공백 대응을 논의한다.",
+    "rarity": "rare",
+    "category": "hr"
+  },
+  {
+    "id": "rare_005",
+    "title": "언론 부정 보도 위기 대응",
+    "description": "국내 주요 매체가 우리 회사의 부정적인 기사를 냈다. SNS가 들끓고 있다. 대응 전략이 필요하다.",
+    "rarity": "rare",
+    "category": "marketing"
+  },
+  {
+    "id": "rare_006",
+    "title": "경쟁사의 카피캣 제품 출시",
+    "description": "대형 경쟁사가 우리 제품과 거의 동일한 기능을 오늘 론칭했다. 차별화 전략을 즉시 재정비해야 한다.",
+    "rarity": "rare",
+    "category": "product"
+  },
+  {
+    "id": "rare_007",
+    "title": "런웨이 6개월 위기",
+    "description": "현재 번 레이트라면 6개월 뒤 현금이 바닥난다. 비용 삭감, 브릿지 투자, 매출 가속화 방안을 결정해야 한다.",
+    "rarity": "rare",
+    "category": "finance"
+  },
+  {
+    "id": "legendary_001",
+    "title": "CEO가 회의 중 실시간으로 사직서 제출",
+    "description": "CEO가 회의 도중 갑자기 \"나 오늘 그만하겠습니다\"라고 선언했다. 남은 C레벨 멤버들이 5분 안에 다음 스텝을 결정해야 한다.",
+    "rarity": "legendary",
+    "category": "executive"
+  },
+  {
+    "id": "legendary_002",
+    "title": "경쟁사 CEO가 인수 제안을 들고 회의실에 등장",
+    "description": "회의 도중 경쟁사 CEO가 직접 찾아와 지금 당장 인수합병 협상을 하자고 한다. 금액은 현재 밸류에이션의 3배.",
+    "rarity": "legendary",
+    "category": "executive"
+  },
+  {
+    "id": "legendary_003",
+    "title": "회의 중 우리 제품이 바이럴 폭발",
+    "description": "회의 도중 트위터 실시간 트렌드 1위에 우리 앱이 올랐다. 서버가 버티고 있는 동안 마케팅과 운영 전략을 지금 결정해야 한다.",
+    "rarity": "legendary",
+    "category": "product"
+  },
+  {
+    "id": "legendary_004",
+    "title": "국세청 세무조사 시작 통보",
+    "description": "회의 중에 국세청으로부터 내일부터 세무조사를 시작한다는 연락이 왔다. 법무, 재무, 경영진이 즉각 대응해야 한다.",
+    "rarity": "legendary",
+    "category": "finance"
+  },
+  {
+    "id": "legendary_005",
+    "title": "실리콘밸리 탑티어 VC의 깜짝 방문",
+    "description": "아무 예고 없이 세계 최대 VC 파트너가 사무실에 찾아와 다음 주 월요일까지 텀시트를 줄 수 있다고 했다. 조건 협상과 내부 준비를 즉시 시작해야 한다.",
+    "rarity": "legendary",
+    "category": "executive"
+  }
+]

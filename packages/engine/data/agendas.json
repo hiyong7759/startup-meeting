@@ -1,0 +1,522 @@
+[
+  {
+    "id": "agenda-001",
+    "title": "신규 기능 vs 버그 수정 우선순위",
+    "description": "이번 스프린트 리소스 배분을 결정해야 합니다. 신규 기능 개발과 기존 버그 수정 중 어디에 집중할까요?",
+    "category": "product",
+    "options": [
+      {
+        "id": "agenda-001-a",
+        "label": "신규 기능 집중",
+        "description": "온보딩 플로우 개선에 전체 리소스 투입",
+        "metricsDelta": { "mau": 800, "techStability": -10, "runway": -1 }
+      },
+      {
+        "id": "agenda-001-b",
+        "label": "버그 수정 집중",
+        "description": "기존 버그 전수 조사 및 수정",
+        "metricsDelta": { "mau": -200, "techStability": 15, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-001-c",
+        "label": "반반 분배",
+        "description": "리소스를 50:50으로 나눠 병행",
+        "metricsDelta": { "mau": 300, "techStability": 5, "runway": -0.5 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-002",
+    "title": "시니어 개발자 채용 vs 주니어 2명",
+    "description": "개발팀 확충이 필요합니다. 시니어 1명과 주니어 2명 중 어느 쪽이 우리 상황에 맞을까요?",
+    "category": "hr",
+    "options": [
+      {
+        "id": "agenda-002-a",
+        "label": "시니어 1명 채용",
+        "description": "월 700만원. 즉시 전력. 기술부채 해결 가능.",
+        "metricsDelta": { "runway": -3, "techStability": 20, "teamMorale": 8 }
+      },
+      {
+        "id": "agenda-002-b",
+        "label": "주니어 2명 채용",
+        "description": "월 450만원×2. 온보딩 비용 있지만 장기적으로 확장 용이.",
+        "metricsDelta": { "runway": -4, "techStability": -5, "teamMorale": -5, "mau": 200 }
+      },
+      {
+        "id": "agenda-002-c",
+        "label": "채용 보류",
+        "description": "현 인원으로 3개월 더 운영",
+        "metricsDelta": { "runway": 1, "techStability": -8, "teamMorale": -12 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-003",
+    "title": "가격 정책 변경",
+    "description": "현재 무료 플랜 비율이 92%입니다. 수익화를 위해 가격 구조를 바꿔야 할 시점입니다.",
+    "category": "finance",
+    "options": [
+      {
+        "id": "agenda-003-a",
+        "label": "프리미엄 플랜 도입",
+        "description": "월 9,900원 유료 플랜 신설. 고급 기능 잠금.",
+        "metricsDelta": { "runway": 3, "mau": -800, "teamMorale": 3 }
+      },
+      {
+        "id": "agenda-003-b",
+        "label": "사용량 기반 과금",
+        "description": "기본 무료, 초과 사용 시 과금. 헤비유저 대상.",
+        "metricsDelta": { "runway": 2, "mau": -200, "teamMorale": 0 }
+      },
+      {
+        "id": "agenda-003-c",
+        "label": "광고 모델 도입",
+        "description": "무료 유지, 배너 광고 삽입",
+        "metricsDelta": { "runway": 1, "mau": -1500, "teamMorale": -8 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-004",
+    "title": "기술 스택 마이그레이션",
+    "description": "현재 모노리스 구조가 한계에 달했습니다. 마이크로서비스 전환을 논의합니다.",
+    "category": "engineering",
+    "options": [
+      {
+        "id": "agenda-004-a",
+        "label": "즉시 전환",
+        "description": "2개월 집중 마이그레이션. 그 동안 신규 개발 중단.",
+        "metricsDelta": { "runway": -2, "techStability": 25, "mau": -500, "teamMorale": -10 }
+      },
+      {
+        "id": "agenda-004-b",
+        "label": "점진적 전환",
+        "description": "모듈 하나씩 단계적 이전. 6개월 예상.",
+        "metricsDelta": { "techStability": 10, "runway": -1, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-004-c",
+        "label": "현행 유지",
+        "description": "모노리스 최적화에 집중. 마이그레이션 1년 연기.",
+        "metricsDelta": { "techStability": -5, "runway": 0.5, "teamMorale": 0 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-005",
+    "title": "SNS 마케팅 예산 배분",
+    "description": "분기 마케팅 예산 3,000만원을 어떻게 쓸지 결정합니다. 채널별로 효율이 다릅니다.",
+    "category": "marketing",
+    "options": [
+      {
+        "id": "agenda-005-a",
+        "label": "인플루언서 집중",
+        "description": "팔로워 10만+ 인플루언서 3명과 협업",
+        "metricsDelta": { "mau": 3000, "runway": -2, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-005-b",
+        "label": "퍼포먼스 마케팅",
+        "description": "구글/메타 광고. CPA 추적 가능.",
+        "metricsDelta": { "mau": 2000, "runway": -2 }
+      },
+      {
+        "id": "agenda-005-c",
+        "label": "콘텐츠 마케팅",
+        "description": "블로그/유튜브 콘텐츠 제작. 장기 자산화.",
+        "metricsDelta": { "mau": 500, "runway": -1, "teamMorale": 8 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-006",
+    "title": "전략적 파트너십 제안",
+    "description": "대형 플랫폼사가 API 제휴를 제안해왔습니다. 좋은 기회지만 독립성이 줄어들 수 있습니다.",
+    "category": "strategy",
+    "options": [
+      {
+        "id": "agenda-006-a",
+        "label": "파트너십 수락",
+        "description": "플랫폼 내 입점. 즉시 트래픽 확보.",
+        "metricsDelta": { "mau": 5000, "runway": 2, "teamMorale": -5 }
+      },
+      {
+        "id": "agenda-006-b",
+        "label": "조건부 수락",
+        "description": "독점 조항 제거 후 협상 재진행",
+        "metricsDelta": { "mau": 2000, "runway": 1, "teamMorale": 3 }
+      },
+      {
+        "id": "agenda-006-c",
+        "label": "거절",
+        "description": "독립 성장 경로 유지",
+        "metricsDelta": { "teamMorale": 10, "mau": -300 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-007",
+    "title": "피벗 vs 현행 유지",
+    "description": "B2C 성장이 정체됐습니다. B2B SaaS로 피벗하자는 의견이 나왔습니다.",
+    "category": "strategy",
+    "options": [
+      {
+        "id": "agenda-007-a",
+        "label": "B2B 피벗",
+        "description": "기업 고객 타겟으로 완전 전환. 6개월 재개발.",
+        "metricsDelta": { "runway": -3, "mau": -2000, "teamMorale": -15 }
+      },
+      {
+        "id": "agenda-007-b",
+        "label": "B2B2C 혼합",
+        "description": "기업 채널로 B2C 유저 확보. 점진적 전환.",
+        "metricsDelta": { "runway": -1, "mau": 1000, "teamMorale": 0 }
+      },
+      {
+        "id": "agenda-007-c",
+        "label": "B2C 유지",
+        "description": "현재 시장에서 더 파고들기. 버티컬 집중.",
+        "metricsDelta": { "mau": 800, "runway": -0.5, "teamMorale": 5 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-008",
+    "title": "시리즈A 투자 유치 타이밍",
+    "description": "현재 런웨이 18개월. 시리즈A 투자를 지금 진행할지 6개월 후로 미룰지 결정합니다.",
+    "category": "finance",
+    "options": [
+      {
+        "id": "agenda-008-a",
+        "label": "즉시 IR 시작",
+        "description": "현재 지표로 투자자 미팅 시작. 밸류에이션은 낮을 수 있음.",
+        "metricsDelta": { "runway": 8, "teamMorale": -5 }
+      },
+      {
+        "id": "agenda-008-b",
+        "label": "6개월 후 IR",
+        "description": "지표 더 성장 후 진행. 더 높은 밸류에이션 기대.",
+        "metricsDelta": { "runway": -2, "mau": 2000, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-008-c",
+        "label": "브릿지 라운드",
+        "description": "기존 투자자에게 소규모 추가 투자 요청",
+        "metricsDelta": { "runway": 4, "teamMorale": -3 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-009",
+    "title": "팀원 번아웃 대응",
+    "description": "최근 2명이 번아웃 증상을 호소합니다. 팀 분위기가 심상치 않습니다.",
+    "category": "hr",
+    "options": [
+      {
+        "id": "agenda-009-a",
+        "label": "팀 워크샵 진행",
+        "description": "1박 2일 팀 리트릿. 업무 외 활동으로 리프레시.",
+        "metricsDelta": { "runway": -0.5, "teamMorale": 20, "mau": -100 }
+      },
+      {
+        "id": "agenda-009-b",
+        "label": "업무량 조정",
+        "description": "스프린트 목표 20% 축소. 당분간 완만한 속도 유지.",
+        "metricsDelta": { "teamMorale": 12, "mau": -500, "techStability": 5 }
+      },
+      {
+        "id": "agenda-009-c",
+        "label": "인센티브 지급",
+        "description": "스톡옵션 조기 베스팅 또는 성과급 지급.",
+        "metricsDelta": { "runway": -1, "teamMorale": 15 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-010",
+    "title": "경쟁사 카피캣 대응",
+    "description": "대형 경쟁사가 우리 핵심 기능을 그대로 복사했습니다. 어떻게 대응할까요?",
+    "category": "strategy",
+    "options": [
+      {
+        "id": "agenda-010-a",
+        "label": "차별화 기능 개발 가속",
+        "description": "경쟁사가 따라올 수 없는 독자 기능에 집중",
+        "metricsDelta": { "mau": 500, "techStability": -8, "teamMorale": 10, "runway": -1 }
+      },
+      {
+        "id": "agenda-010-b",
+        "label": "가격 경쟁",
+        "description": "경쟁사보다 저렴하게. 무료 기능 확대.",
+        "metricsDelta": { "mau": 2000, "runway": -2, "teamMorale": -5 }
+      },
+      {
+        "id": "agenda-010-c",
+        "label": "커뮤니티 구축",
+        "description": "유저 커뮤니티 강화로 락인 효과 극대화",
+        "metricsDelta": { "mau": 1200, "teamMorale": 8, "runway": -0.5 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-011",
+    "title": "오피스 vs 풀리모트 전환",
+    "description": "임대료가 매달 800만원입니다. 풀리모트로 전환하면 비용 절감이 가능하지만 협업 방식이 달라집니다.",
+    "category": "hr",
+    "options": [
+      {
+        "id": "agenda-011-a",
+        "label": "풀리모트 전환",
+        "description": "오피스 계약 해지. 화상회의 툴 강화.",
+        "metricsDelta": { "runway": 3, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-011-b",
+        "label": "하이브리드 유지",
+        "description": "주 2회 출근. 오피스 규모 축소.",
+        "metricsDelta": { "runway": 1.5, "teamMorale": 0 }
+      },
+      {
+        "id": "agenda-011-c",
+        "label": "오피스 유지",
+        "description": "오프라인 협업의 이점 강조. 비용은 다른 곳에서 절감.",
+        "metricsDelta": { "runway": -1, "teamMorale": 8, "techStability": 5 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-012",
+    "title": "신규 시장 진출 검토",
+    "description": "일본 시장 진출 제안이 들어왔습니다. 현지 파트너가 있고 시장성은 충분하지만 리소스가 분산됩니다.",
+    "category": "strategy",
+    "options": [
+      {
+        "id": "agenda-012-a",
+        "label": "일본 진출 추진",
+        "description": "현지 파트너와 6개월 파일럿",
+        "metricsDelta": { "mau": 3000, "runway": -3, "teamMorale": -8 }
+      },
+      {
+        "id": "agenda-012-b",
+        "label": "국내 집중 후 진출",
+        "description": "국내 MAU 5만 달성 후 재검토",
+        "metricsDelta": { "mau": 1500, "teamMorale": 5, "runway": -0.5 }
+      },
+      {
+        "id": "agenda-012-c",
+        "label": "진출 거절",
+        "description": "현재는 국내 집중. 내년 재논의.",
+        "metricsDelta": { "teamMorale": 3, "mau": 0 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-013",
+    "title": "고객 CS 팀 구성",
+    "description": "유저 불만 티켓이 하루 50건을 넘어섰습니다. 전담 CS 인력이 필요한 시점입니다.",
+    "category": "hr",
+    "options": [
+      {
+        "id": "agenda-013-a",
+        "label": "CS 담당자 채용",
+        "description": "풀타임 CS 1명 고용. 월 350만원.",
+        "metricsDelta": { "runway": -1.5, "mau": 500, "teamMorale": 8 }
+      },
+      {
+        "id": "agenda-013-b",
+        "label": "AI 챗봇 도입",
+        "description": "인터콤 또는 챗GPT API 기반 자동 응답",
+        "metricsDelta": { "runway": -0.5, "mau": 200, "techStability": -3 }
+      },
+      {
+        "id": "agenda-013-c",
+        "label": "개발팀이 돌아가며 처리",
+        "description": "당분간 팀원들이 순번제로 CS 대응",
+        "metricsDelta": { "teamMorale": -15, "techStability": -5, "mau": -200 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-014",
+    "title": "데이터 보안 감사 대응",
+    "description": "B2B 고객사가 ISO 27001 인증을 요구합니다. 취득에는 3개월과 2,000만원이 필요합니다.",
+    "category": "engineering",
+    "options": [
+      {
+        "id": "agenda-014-a",
+        "label": "인증 취득 추진",
+        "description": "즉시 준비 시작. B2B 영업 필수 조건 충족.",
+        "metricsDelta": { "runway": -2, "techStability": 15, "mau": 1000 }
+      },
+      {
+        "id": "agenda-014-b",
+        "label": "자체 보안 정책 강화",
+        "description": "인증 없이 보안 수준만 높임. 문서로 대응.",
+        "metricsDelta": { "runway": -0.5, "techStability": 8 }
+      },
+      {
+        "id": "agenda-014-c",
+        "label": "인증 요구 고객 포기",
+        "description": "현재 SMB 시장에 집중. 엔터프라이즈는 나중에.",
+        "metricsDelta": { "teamMorale": -5, "mau": -500 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-015",
+    "title": "앱 성능 최적화 vs 신규 플랫폼 지원",
+    "description": "안드로이드 사용자 이탈률이 높습니다. 최적화에 집중할지 아이패드 지원을 추가할지 결정합니다.",
+    "category": "product",
+    "options": [
+      {
+        "id": "agenda-015-a",
+        "label": "안드로이드 최적화",
+        "description": "로딩 속도 50% 개선 목표. 2주 스프린트.",
+        "metricsDelta": { "mau": 1200, "techStability": 10, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-015-b",
+        "label": "아이패드 지원 추가",
+        "description": "태블릿 UI 신규 개발. 프리미엄 유저 타겟.",
+        "metricsDelta": { "mau": 800, "runway": -1, "techStability": -5 }
+      },
+      {
+        "id": "agenda-015-c",
+        "label": "웹앱으로 확장",
+        "description": "반응형 웹 버전 개발. 플랫폼 제약 탈피.",
+        "metricsDelta": { "mau": 2000, "runway": -2, "techStability": -8, "teamMorale": -5 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-016",
+    "title": "핵심 직원 이직 방어",
+    "description": "시니어 개발자가 경쟁사 오퍼를 받았습니다. 연봉 30% 인상을 요구하고 있습니다.",
+    "category": "hr",
+    "options": [
+      {
+        "id": "agenda-016-a",
+        "label": "요구 수락",
+        "description": "연봉 인상 수용. 핵심 인재 유지.",
+        "metricsDelta": { "runway": -2, "techStability": 10, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-016-b",
+        "label": "스톡옵션 제안",
+        "description": "현금 대신 추가 스톡옵션 부여로 협상",
+        "metricsDelta": { "runway": 0, "teamMorale": 3, "techStability": 5 }
+      },
+      {
+        "id": "agenda-016-c",
+        "label": "이직 수용",
+        "description": "아쉽지만 보내드리기. 후임 채용 진행.",
+        "metricsDelta": { "runway": -1, "techStability": -15, "teamMorale": -10 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-017",
+    "title": "유저 피드백 반영 범위",
+    "description": "파워 유저 100명이 대규모 UI 개편을 강력히 요청했습니다. 하지만 일반 유저 반응은 엇갈립니다.",
+    "category": "product",
+    "options": [
+      {
+        "id": "agenda-017-a",
+        "label": "전면 개편",
+        "description": "파워 유저 요구대로 UI 전면 재설계",
+        "metricsDelta": { "mau": -1000, "teamMorale": -8, "runway": -2 }
+      },
+      {
+        "id": "agenda-017-b",
+        "label": "베타 옵션 제공",
+        "description": "신 UI를 선택 가능한 베타로 출시",
+        "metricsDelta": { "mau": 300, "teamMorale": 5, "runway": -1 }
+      },
+      {
+        "id": "agenda-017-c",
+        "label": "부분 반영",
+        "description": "요청 중 빠른 win 항목만 선별해 반영",
+        "metricsDelta": { "mau": 500, "teamMorale": 3, "techStability": 3 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-018",
+    "title": "외부 API 의존도 위기",
+    "description": "핵심 기능에 사용하는 외부 API가 가격을 300% 인상한다고 통보했습니다.",
+    "category": "engineering",
+    "options": [
+      {
+        "id": "agenda-018-a",
+        "label": "자체 개발",
+        "description": "해당 기능 인하우스로 전환. 3개월 예상.",
+        "metricsDelta": { "runway": -3, "techStability": 5, "mau": -300, "teamMorale": -5 }
+      },
+      {
+        "id": "agenda-018-b",
+        "label": "대안 API 탐색",
+        "description": "경쟁 API 서비스로 마이그레이션",
+        "metricsDelta": { "runway": -1, "techStability": -5, "mau": -100 }
+      },
+      {
+        "id": "agenda-018-c",
+        "label": "인상 수용",
+        "description": "비용 증가를 유저 가격에 전가",
+        "metricsDelta": { "runway": -2, "mau": -600 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-019",
+    "title": "프로덕트 런치 타이밍",
+    "description": "메이저 업데이트가 완성됐습니다. 경쟁사 출시일이 다음 달로 알려졌습니다.",
+    "category": "product",
+    "options": [
+      {
+        "id": "agenda-019-a",
+        "label": "즉시 출시",
+        "description": "경쟁사 앞에 출시. 일부 버그는 감수.",
+        "metricsDelta": { "mau": 3000, "techStability": -12, "teamMorale": 8, "runway": -1 }
+      },
+      {
+        "id": "agenda-019-b",
+        "label": "2주 후 출시",
+        "description": "QA 마무리 후 안정적 출시",
+        "metricsDelta": { "mau": 2000, "techStability": 8, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-019-c",
+        "label": "얼리 액세스 출시",
+        "description": "대기자 리스트 유저에게 먼저 오픈",
+        "metricsDelta": { "mau": 1000, "techStability": 3, "teamMorale": 10 }
+      }
+    ]
+  },
+  {
+    "id": "agenda-020",
+    "title": "미디어 위기 대응",
+    "description": "유명 IT 유튜버가 우리 서비스를 부정적으로 리뷰하는 영상을 올렸습니다. 조회수 30만입니다.",
+    "category": "marketing",
+    "options": [
+      {
+        "id": "agenda-020-a",
+        "label": "공식 대응 발표",
+        "description": "블로그 포스트와 SNS로 공식 입장 발표",
+        "metricsDelta": { "mau": -500, "teamMorale": 5 }
+      },
+      {
+        "id": "agenda-020-b",
+        "label": "유튜버 직접 접촉",
+        "description": "콜라보 제안 또는 업데이트 내용 전달",
+        "metricsDelta": { "mau": 1000, "teamMorale": 8, "runway": -0.5 }
+      },
+      {
+        "id": "agenda-020-c",
+        "label": "무대응",
+        "description": "잊혀지길 기다리며 제품 개선에만 집중",
+        "metricsDelta": { "mau": -1500, "teamMorale": -8 }
+      }
+    ]
+  }
+]
