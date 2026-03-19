@@ -11,7 +11,19 @@ AI 캐릭터들과 함께하는 화상회의 스타일 의사결정 시뮬레이
 
 - **Node.js** 20+
 - **pnpm** 9+ (`npm install -g pnpm`)
-- **Claude Code** CLI (`npm install -g @anthropic-ai/claude-code` → `claude login`)
+- **Claude Code** + Claude Pro/Max 구독
+
+### Claude Code 설치 & 로그인
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude login
+```
+
+Claude Pro($20/월) 또는 Max($100/월) 구독 계정으로 로그인하세요.
+프록시 서버가 `claude` CLI를 통해 LLM을 호출하므로 별도 API 키나 과금이 없습니다.
+
+> `claude --version` 이 동작하면 준비 완료.
 
 ### 설치 & 실행
 
@@ -25,47 +37,8 @@ pnpm dev:all
 브라우저에서 `http://localhost:5173` 접속.
 
 `pnpm dev:all`은 두 서버를 동시에 띄웁니다:
-- `:5173` — React 웹앱 (Vite)
+- `:5173` — React 웹앱
 - `:3001` — LLM 프록시 서버 (Claude CLI 연동)
-
-> 따로 띄우고 싶으면: `pnpm server` (프록시) + `pnpm dev` (웹앱)
-
-### LLM 연결 방법 (3가지 중 택 1)
-
-#### 방법 1: Claude Code 구독 사용 (추천, API 비용 무료)
-
-Claude Pro($20/월) 또는 Max($100/월) 구독이 있으면 별도 API 비용 없이 사용 가능합니다.
-
-```bash
-# 1. Claude Code 설치
-npm install -g @anthropic-ai/claude-code
-
-# 2. 로그인 (구독 계정으로)
-claude login
-
-# 3. 실행 — 끝. API 키 필요 없음.
-pnpm dev:all
-```
-
-프록시 서버가 내부적으로 `claude --print` CLI를 호출해서 LLM 응답을 가져옵니다.
-유저의 Claude 구독 크레딧을 사용하므로 별도 API 과금이 없습니다.
-
-> Claude Code 구독 확인: `claude --version`이 동작하면 OK.
-
-#### 방법 2: Anthropic API 키 (BYOK)
-
-Claude 구독 없이 API 키로 직접 사용합니다. 사용량만큼 과금됩니다.
-
-1. https://console.anthropic.com 에서 API 키 발급
-2. `pnpm dev:all` 실행
-3. 브라우저에서 Settings 페이지 진입
-4. API Key에 `sk-ant-...` 입력 + Save
-5. Server URL은 `http://localhost:3001` 그대로
-
-#### 방법 3: 배포 환경 (Cloudflare Worker)
-
-팀원들이 로컬 설치 없이 접속할 수 있게 하려면 하단의 "배포" 섹션을 참고하세요.
-이 경우 각 유저가 Settings에서 자기 API 키를 입력해야 합니다.
 
 ## 사용법
 
@@ -75,10 +48,9 @@ Claude 구독 없이 API 키로 직접 사용합니다. 사용량만큼 과금�
 
 ### 2. 주제 선택
 
-세 가지 방법:
 - **직접 입력**: "마케팅 예산을 50% 줄여야 할 것 같아" 같은 자유 주제
-- **등급 선택**: 일상 / 전략 / 위기 중 택 1 → AI가 랜덤 생성
-- **가챠**: 랜덤 등급 + 히든 보너스 (티켓 1장 소모)
+- **등급 선택**: 일상 / 전략 / 위기 중 택 1
+- **가챠**: 랜덤 등급 + 히든 보너스
 
 ### 3. 맥락 질문
 
@@ -97,23 +69,19 @@ AI가 5~7명의 참석자를 선별합니다. 그 중 하나를 클릭해서 내
 
 - 왼쪽: 대화 스트림 (실시간 스트리밍)
 - 오른쪽: 참석자 카드 (발언자 하이라이트)
-- 하단: 발언 입력 + 이모지 반응 (+1, -1, ..., !?) + 넘기기
-
-AI 캐릭터들이 순서대로 발언하고, 내 차례에 텍스트를 입력하면 됩니다.
+- 하단: 발언 입력 + 이모지 반응 + 넘기기
 
 ### 6. 회의 종료 → 결과
 
-"End Meeting" 버튼 클릭 시:
-- **회의록**: 안건, 참석자, 주요 발언 요약, 결정사항, 액션 아이템
-- **평가 리포트**: 내가 본 관점 / 놓친 관점, 역할별 점수, 예상 결과, "다른 역할이었다면?"
-- **보상**: XP, 레벨업, 캐릭터 카드 드롭, 업적 해금
+"End Meeting" 클릭 시:
+- **회의록**: 안건, 참석자, 주요 발언, 결정사항, 액션 아이템
+- **평가 리포트**: 본 관점 / 놓친 관점, 점수, 예상 결과, "다른 역할이었다면?"
+- **보상**: XP, 레벨업, 캐릭터 카드 드롭, 업적
 
 ### 7. PLAN Export
 
 결과 화면에서 "Copy PLAN" 또는 "Download PLAN" 클릭.
-회의 결과가 구조화된 Markdown으로 출력됩니다.
-
-이걸 Claude Code에 붙여넣으면 회의 결과 기반으로 PRD/코드/테스트를 자동 생성할 수 있습니다.
+회의 결과를 Claude Code에 붙여넣으면 PRD/코드/테스트를 자동 생성할 수 있습니다.
 
 ## 프로젝트 구조
 
@@ -124,20 +92,9 @@ startup-meeting/
 │   ├── engine/         — 게임 로직 (역할, 가챠, XP, 이벤트)
 │   └── composer/       — LLM 호출 (세팅, 회의 대화, 평가, export)
 ├── adapters/
-│   ├── web/            — React 웹앱 (프론트엔드)
-│   ├── server/         — 로컬 LLM 프록시 (CLI/API 듀얼)
-│   ├── worker/         — Cloudflare Worker (배포용 프록시)
-│   └── kakao/          — 카카오톡 어댑터 (레거시, 후순위)
+│   ├── web/            — React 웹앱
+│   └── server/         — LLM 프록시 (Claude CLI 연동)
 └── scripts/
-```
-
-### 엔진/어댑터 분리
-
-`packages/`는 UI에 의존하지 않습니다. 엔진과 컴포저만 가져다 쓰면 어떤 UI든 붙일 수 있습니다.
-
-```typescript
-import { getAllRoles, pullGacha } from '@startup-meeting/engine';
-import { generateMeetingSetup, streamCharacterUtterance } from '@startup-meeting/composer';
 ```
 
 ## 기술 스택
@@ -145,52 +102,9 @@ import { generateMeetingSetup, streamCharacterUtterance } from '@startup-meeting
 | 레이어 | 기술 |
 |--------|------|
 | Frontend | React 19, Vite, TailwindCSS v4, Framer Motion, Zustand |
-| LLM | Claude (Haiku: 회의 대화, Sonnet: 세팅/평가) |
-| Proxy (로컬) | Node.js + Hono + Claude CLI subprocess |
-| Proxy (배포) | Cloudflare Workers |
-| Storage | localStorage (MVP) |
-
-## 배포 (Cloudflare Worker + Vercel)
-
-### 1. Worker 배포
-
-```bash
-cd adapters/worker
-npx wrangler login
-npx wrangler deploy
-```
-
-배포 후 `wrangler.toml`의 `ALLOWED_ORIGINS`에 Vercel URL 추가.
-
-### 2. Vercel 배포
-
-```bash
-cd adapters/web
-npx vercel
-```
-
-### 3. 접속
-
-배포된 URL 접속 → Settings → Server URL에 Worker URL 입력 + API Key 입력.
-
-## LLM 비용
-
-1회 회의 기준 약 $0.09 (약 120원):
-- 세팅 맥락질문 (Haiku): ~$0.005
-- 회의 구성 (Sonnet): ~$0.02
-- 회의 대화 5명x4턴 (Haiku): ~$0.04
-- 평가 리포트 (Sonnet): ~$0.03
-
-CLI 모드(Claude Code 구독)에서는 별도 API 비용 없음.
-
-## 데이터
-
-| 데이터 | 수량 |
-|--------|------|
-| 역할 프로필 | 30개 (경영진 6, 관리자 6, 실무 12, 주니어 6) |
-| 가챠 주제 | 44개 (일상 20, 전략 12, 위기 7, 레전더리 5) |
-| 업적 | 14개 |
-| 이벤트 | 20개 |
+| LLM | Claude Haiku (회의 대화), Claude Sonnet (세팅/평가) |
+| Proxy | Node.js + Hono + Claude CLI subprocess |
+| Storage | localStorage |
 
 ## License
 
