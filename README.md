@@ -30,14 +30,42 @@ pnpm dev:all
 
 > 따로 띄우고 싶으면: `pnpm server` (프록시) + `pnpm dev` (웹앱)
 
-### Claude Code가 없는 경우 (BYOK 모드)
+### LLM 연결 방법 (3가지 중 택 1)
 
-Claude CLI 없이도 Anthropic API 키로 사용 가능합니다.
+#### 방법 1: Claude Code 구독 사용 (추천, API 비용 무료)
 
-1. `pnpm dev:all` 실행
-2. 브라우저에서 Settings 페이지 진입
-3. API Key에 `sk-ant-...` 입력 + Save
-4. Server URL은 `http://localhost:3001` 그대로
+Claude Pro($20/월) 또는 Max($100/월) 구독이 있으면 별도 API 비용 없이 사용 가능합니다.
+
+```bash
+# 1. Claude Code 설치
+npm install -g @anthropic-ai/claude-code
+
+# 2. 로그인 (구독 계정으로)
+claude login
+
+# 3. 실행 — 끝. API 키 필요 없음.
+pnpm dev:all
+```
+
+프록시 서버가 내부적으로 `claude --print` CLI를 호출해서 LLM 응답을 가져옵니다.
+유저의 Claude 구독 크레딧을 사용하므로 별도 API 과금이 없습니다.
+
+> Claude Code 구독 확인: `claude --version`이 동작하면 OK.
+
+#### 방법 2: Anthropic API 키 (BYOK)
+
+Claude 구독 없이 API 키로 직접 사용합니다. 사용량만큼 과금됩니다.
+
+1. https://console.anthropic.com 에서 API 키 발급
+2. `pnpm dev:all` 실행
+3. 브라우저에서 Settings 페이지 진입
+4. API Key에 `sk-ant-...` 입력 + Save
+5. Server URL은 `http://localhost:3001` 그대로
+
+#### 방법 3: 배포 환경 (Cloudflare Worker)
+
+팀원들이 로컬 설치 없이 접속할 수 있게 하려면 하단의 "배포" 섹션을 참고하세요.
+이 경우 각 유저가 Settings에서 자기 API 키를 입력해야 합니다.
 
 ## 사용법
 
