@@ -48,31 +48,28 @@ export default function UserInput({ onSend, onSkip, disabled }: Props) {
           className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 rounded-lg text-sm transition-colors"
           title="동의"
         >
-          +1
+          동의
         </button>
         <button
           onClick={() => handleEmoji('disagree')}
           disabled={disabled}
           className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 rounded-lg text-sm transition-colors"
-          title="반대"
         >
-          -1
+          반대
         </button>
         <button
           onClick={() => handleEmoji('thinking')}
           disabled={disabled}
           className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 rounded-lg text-sm transition-colors"
-          title="생각중"
         >
-          ...
+          글쎄요
         </button>
         <button
           onClick={() => handleEmoji('surprised')}
           disabled={disabled}
           className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 rounded-lg text-sm transition-colors"
-          title="놀람"
         >
-          !?
+          헐
         </button>
         <div className="flex-1" />
         <button

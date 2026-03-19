@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { motion, AnimatePresence } from 'framer-motion';
+import TermTooltip from './TermTooltip';
 
 export default function ChatStream() {
   const dialogue = useGameStore((s) => s.dialogue);
@@ -37,7 +38,7 @@ export default function ChatStream() {
                       : 'bg-gray-800 text-gray-100 rounded-bl-sm'
                   }`}
                 >
-                  {entry.text}
+                  <TermTooltip text={entry.text} />
                 </div>
               </div>
             </motion.div>

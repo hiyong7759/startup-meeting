@@ -1,7 +1,7 @@
 import type { CharacterUtterance, CharacterId } from '@startup-meeting/types';
 import type { Role, DynamicAgenda, MeetingParticipant } from '@startup-meeting/types';
 import { callLlm, callLlmStream } from './llm-client';
-import { buildCharacterSystemPrompt } from './prompt';
+import { buildCharacterSystemPrompt, buildTurnPrompt } from './prompt';
 
 export interface MeetingContext {
   agenda: DynamicAgenda;
@@ -17,29 +17,52 @@ export interface DialogueEntry {
   text: string;
 }
 
+// Per-character conversation memory
+// Key: role.id, Value: full dialogue from that character's perspective
+const characterSessions = new Map<string, DialogueEntry[]>();
+
+export function resetCharacterSessions(): void {
+  characterSessions.clear();
+}
+
+// Build the full history from this character's perspective
+// They see ALL dialogue (not just their own), building up context each turn
+function buildFullHistory(characterId: string, allDialogue: DialogueEntry[]): string {
+  if (allDialogue.length === 0) return '';
+
+  // Give full history, not just last 8
+  // But cap at ~30 to avoid token explosion
+  const relevant = allDialogue.slice(-30);
+  return relevant.map((d) => `${d.speaker}: ${d.text}`).join('\n');
+}
+
+function getLastSpeakerInfo(dialogue: DialogueEntry[]): { speaker: string | null; text: string | null } {
+  const last = dialogue[dialogue.length - 1];
+  return { speaker: last?.speaker ?? null, text: last?.text ?? null };
+}
+
 export async function generateCharacterUtterance(
   participant: MeetingParticipant,
   context: MeetingContext,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
+  const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
-  const historyText = context.dialogueHistory
-    .slice(-8)
-    .map((d) => `${d.speaker}(${d.role}): ${d.text}`)
-    .join('\n');
+  const turnPrompt = buildTurnPrompt(
+    participant.role,
+    context.dialogueHistory.length,
+    context.participants.length,
+    lastSpeaker,
+    lastText,
+    context.dialogueHistory.length,
+  );
 
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
-
-  if (historyText) {
-    userMessage += `최근 대화:\n${historyText}\n\n`;
-  }
-
-  if (context.currentEvent) {
-    userMessage += `⚡ 방금 발생한 이벤트: ${context.currentEvent}\n\n`;
-  }
-
-  userMessage += `당신의 초기 입장: ${participant.initialStance}\n`;
-  userMessage += `1-2문장으로 의견을 말하세요.`;
+  if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
+  if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
+  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
+  userMessage += `[지시] ${turnPrompt}`;
 
   const response = await callLlm({
     system: systemPrompt,
@@ -63,13 +86,22 @@ export async function generateReactionToUser(
   context: MeetingContext,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
 
-  const historyText = context.dialogueHistory
-    .slice(-5)
-    .map((d) => `${d.speaker}(${d.role}): ${d.text}`)
-    .join('\n');
+  const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
+  const turnPrompt = buildTurnPrompt(
+    participant.role,
+    context.dialogueHistory.length,
+    context.participants.length,
+    lastSpeaker,
+    lastText,
+    context.dialogueHistory.length,
+  );
 
-  const prompt = `회의 안건: ${context.agenda.title}\n\n최근 대화:\n${historyText}\n\n${context.userRole.title}(유저)이 방금 말했습니다: "${userMessage}"\n\n이에 대해 1-2문장으로 반응하세요. 당신의 역할과 관점에서 반응하세요.`;
+  let prompt = `회의 안건: ${context.agenda.title}\n\n`;
+  if (historyText) prompt += `지금까지 대화:\n${historyText}\n\n`;
+  prompt += `${context.userRole.title}이(가) 방금: "${userMessage}"\n\n`;
+  prompt += `[지시] ${turnPrompt}`;
 
   const response = await callLlm({
     system: systemPrompt,
@@ -87,24 +119,29 @@ export async function generateReactionToUser(
   };
 }
 
-// Streaming version: calls onChunk with each text fragment as it arrives
 export async function streamCharacterUtterance(
   participant: MeetingParticipant,
   context: MeetingContext,
   onChunk: (chunk: string) => void,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
+  const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
-  const historyText = context.dialogueHistory
-    .slice(-8)
-    .map((d) => `${d.speaker}(${d.role}): ${d.text}`)
-    .join('\n');
+  const turnPrompt = buildTurnPrompt(
+    participant.role,
+    context.dialogueHistory.length,
+    context.participants.length,
+    lastSpeaker,
+    lastText,
+    context.dialogueHistory.length,
+  );
 
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
-  if (historyText) userMessage += `최근 대화:\n${historyText}\n\n`;
+  if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
-  userMessage += `당신의 초기 입장: ${participant.initialStance}\n`;
-  userMessage += `1-2문장으로 의견을 말하세요.`;
+  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
+  userMessage += `[지시] ${turnPrompt}`;
 
   const response = await callLlmStream(
     { system: systemPrompt, userMessage, model: 'haiku', maxTokens: 200 },
@@ -127,13 +164,22 @@ export async function streamReactionToUser(
   onChunk: (chunk: string) => void,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
+  const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
-  const historyText = context.dialogueHistory
-    .slice(-5)
-    .map((d) => `${d.speaker}(${d.role}): ${d.text}`)
-    .join('\n');
+  const turnPrompt = buildTurnPrompt(
+    participant.role,
+    context.dialogueHistory.length,
+    context.participants.length,
+    lastSpeaker,
+    lastText,
+    context.dialogueHistory.length,
+  );
 
-  const prompt = `회의 안건: ${context.agenda.title}\n\n최근 대화:\n${historyText}\n\n${context.userRole.title}(유저)이 방금 말했습니다: "${userMsg}"\n\n이에 대해 1-2문장으로 반응하세요.`;
+  let prompt = `회의 안건: ${context.agenda.title}\n\n`;
+  if (historyText) prompt += `지금까지 대화:\n${historyText}\n\n`;
+  prompt += `${context.userRole.title}이(가) 방금: "${userMsg}"\n\n`;
+  prompt += `[지시] ${turnPrompt}`;
 
   const response = await callLlmStream(
     { system: systemPrompt, userMessage: prompt, model: 'haiku', maxTokens: 200 },
@@ -147,6 +193,57 @@ export async function streamReactionToUser(
     type: 'decision_reaction',
     emotion: inferEmotion(response.text),
   };
+}
+
+// Detect terms that might need explanation
+// Returns array of {term, startIndex, endIndex}
+export function detectTerms(text: string): Array<{ term: string; start: number; end: number }> {
+  const terms: Array<{ term: string; start: number; end: number }> = [];
+  const patterns = [
+    // Business/finance
+    /MRR|ARR|ARPU|CAC|LTV|ROI|PMF|TAM|SAM|SOM|EBITDA|P&L|BEP|GM|NPS/g,
+    /런웨이|번레이트|시리즈[A-Z]|프리[A-Z]|벨류에이션|엑시트|IPO|M&A/g,
+    /유닛이코노믹스|코호트|리텐션|퍼널|컨버전|온보딩|DAU|MAU|WAU/g,
+    // Tech
+    /MSA|모놀리식|마이크로서비스|CI\/CD|DevOps|SRE|SLA|SLO|SLI/g,
+    /스케일아웃|스케일업|레이턴시|쓰루풋|카나리|블루그린|롤백/g,
+    /OKR|KPI|스프린트|애자일|스크럼|칸반|레트로|스탠드업/g,
+    // Marketing
+    /CPC|CPM|CPA|CPL|ROAS|CTR|CVR|SEO|SEM|퍼포먼스마케팅/g,
+    /리퍼럴|바이럴|오가닉|페이드|브랜딩|GTM|PLG/g,
+  ];
+
+  for (const pattern of patterns) {
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      terms.push({
+        term: match[0],
+        start: match.index,
+        end: match.index + match[0].length,
+      });
+    }
+  }
+
+  // Deduplicate and sort by position
+  const seen = new Set<string>();
+  return terms
+    .filter((t) => {
+      if (seen.has(`${t.start}-${t.term}`)) return false;
+      seen.add(`${t.start}-${t.term}`);
+      return true;
+    })
+    .sort((a, b) => a.start - b.start);
+}
+
+// Get explanation for a term via LLM
+export async function explainTerm(term: string, meetingContext: string): Promise<string> {
+  const response = await callLlm({
+    system: '비즈니스/기술 용어를 설명하는 전문가입니다. 짧고 쉽게 설명하세요.',
+    userMessage: `"${term}"을(를) 한국어로 2-3문장으로 쉽게 설명해주세요.\n\n회의 맥락: ${meetingContext}`,
+    model: 'haiku',
+    maxTokens: 150,
+  });
+  return response.text.trim();
 }
 
 function inferEmotion(text: string): CharacterUtterance['emotion'] {
