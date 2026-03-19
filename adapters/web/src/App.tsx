@@ -6,7 +6,6 @@ import Setup from './pages/Setup';
 import Meeting from './pages/Meeting';
 import Result from './pages/Result';
 import History from './pages/History';
-import Settings from './pages/Settings';
 
 export default function App() {
   return (
@@ -18,7 +17,6 @@ export default function App() {
         <Route path="/meeting" element={<Meeting />} />
         <Route path="/result" element={<Result />} />
         <Route path="/history" element={<History />} />
-        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Layout>
   );

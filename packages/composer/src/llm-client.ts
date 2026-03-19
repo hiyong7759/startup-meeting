@@ -66,9 +66,11 @@ export async function callLlm(request: LlmRequest): Promise<LlmResponse> {
 }
 
 // Streaming: get chunks in real-time via SSE (used for meeting dialogue)
+// Pass an AbortSignal to cancel mid-stream (e.g. user interrupts)
 export async function callLlmStream(
   request: LlmRequest,
   onChunk: (text: string) => void,
+  signal?: AbortSignal,
 ): Promise<LlmResponse> {
   const serverUrl = config.serverUrl ?? 'http://localhost:3001';
 
@@ -86,6 +88,7 @@ export async function callLlmStream(
       model: request.model ?? 'haiku',
       maxTokens: request.maxTokens ?? 1024,
     }),
+    signal,
   });
 
   if (!response.ok) {

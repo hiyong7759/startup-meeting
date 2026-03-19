@@ -62,13 +62,13 @@ export async function generateCharacterUtterance(
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
   userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
-  userMessage += `[지시] ${turnPrompt}`;
+  userMessage += `자연스럽게 대화를 이어가세요.`;
 
   const response = await callLlm({
     system: systemPrompt,
     userMessage,
     model: 'haiku',
-    maxTokens: 200,
+    maxTokens: 150,
   });
 
   return {
@@ -107,7 +107,7 @@ export async function generateReactionToUser(
     system: systemPrompt,
     userMessage: prompt,
     model: 'haiku',
-    maxTokens: 200,
+    maxTokens: 150,
   });
 
   return {
@@ -123,6 +123,7 @@ export async function streamCharacterUtterance(
   participant: MeetingParticipant,
   context: MeetingContext,
   onChunk: (chunk: string) => void,
+  signal?: AbortSignal,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
@@ -141,11 +142,12 @@ export async function streamCharacterUtterance(
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
   userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
-  userMessage += `[지시] ${turnPrompt}`;
+  userMessage += `자연스럽게 대화를 이어가세요.`;
 
   const response = await callLlmStream(
-    { system: systemPrompt, userMessage, model: 'haiku', maxTokens: 200 },
+    { system: systemPrompt, userMessage, model: 'haiku', maxTokens: 150 },
     onChunk,
+    signal,
   );
 
   return {
@@ -162,6 +164,7 @@ export async function streamReactionToUser(
   userMsg: string,
   context: MeetingContext,
   onChunk: (chunk: string) => void,
+  signal?: AbortSignal,
 ): Promise<CharacterUtterance> {
   const systemPrompt = buildCharacterSystemPrompt(participant.role);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
@@ -182,8 +185,9 @@ export async function streamReactionToUser(
   prompt += `[지시] ${turnPrompt}`;
 
   const response = await callLlmStream(
-    { system: systemPrompt, userMessage: prompt, model: 'haiku', maxTokens: 200 },
+    { system: systemPrompt, userMessage: prompt, model: 'haiku', maxTokens: 150 },
     onChunk,
+    signal,
   );
 
   return {

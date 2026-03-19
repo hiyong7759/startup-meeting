@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
 import { useUiStore } from '../stores/uiStore';
 import { streamCharacterUtterance, streamReactionToUser } from '@startup-meeting/composer';
 import type { MeetingContext, DialogueEntry } from '@startup-meeting/composer';
+import type { MeetingParticipant } from '@startup-meeting/types';
 import ChatStream from '../components/meeting/ChatStream';
 import ParticipantGrid from '../components/meeting/ParticipantGrid';
 import UserInput from '../components/meeting/UserInput';
@@ -18,11 +19,17 @@ export default function Meeting() {
     meetingSetup, userRole, dialogue, addDialogue,
     setSessionPhase, isLoading, setLoading,
     startStreaming, appendStreamChunk, endStreaming,
+    streamingText, streamingSpeaker,
   } = useGameStore();
   const { activeSpeakerId, setActiveSpeaker, isMetricsPanelOpen, toggleMetricsPanel } = useUiStore();
   const [currentEvent, setCurrentEvent] = useState<{ title: string; description: string } | null>(null);
   const [isAiTurn, setIsAiTurn] = useState(true);
   const [turnIndex, setTurnIndex] = useState(0);
+  // Speakers for current round — selected once, not re-shuffled
+  const [roundSpeakers, setRoundSpeakers] = useState<MeetingParticipant[]>([]);
+
+  // AbortController for cancelling current AI stream
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!meetingSetup || !userRole) {
@@ -38,26 +45,43 @@ export default function Meeting() {
     userRole: userRole!,
   }), [meetingSetup, dialogue, currentEvent, userRole]);
 
-  // AI turn with streaming
-  const runAiTurn = useCallback(async () => {
+  // Pick speakers once at the start of each AI round
+  const pickNewSpeakers = useCallback(() => {
     if (!meetingSetup || !userRole) return;
-
     const aiParticipants = meetingSetup.participants.filter(
       (p) => p.role.id !== userRole.id,
     );
+    const count = Math.min(2 + Math.floor(Math.random() * 2), aiParticipants.length);
+    const shuffled = [...aiParticipants].sort(() => Math.random() - 0.5);
+    setRoundSpeakers(shuffled.slice(0, count));
+    setTurnIndex(0);
+  }, [meetingSetup, userRole]);
 
-    if (turnIndex >= aiParticipants.length) {
+  // Pick speakers on first render and when a new AI round starts
+  useEffect(() => {
+    if (isAiTurn && roundSpeakers.length === 0 && meetingSetup && userRole) {
+      pickNewSpeakers();
+    }
+  }, [isAiTurn, roundSpeakers.length, meetingSetup, userRole, pickNewSpeakers]);
+
+  const runAiTurn = useCallback(async () => {
+    if (!meetingSetup || !userRole || roundSpeakers.length === 0) return;
+
+    if (turnIndex >= roundSpeakers.length) {
       setIsAiTurn(false);
+      setRoundSpeakers([]);
       setActiveSpeaker(userRole.id);
       return;
     }
 
-    const participant = aiParticipants[turnIndex];
+    const participant = roundSpeakers[turnIndex];
     setLoading(true);
-
-    // Start streaming — highlight card + show partial text in chat
     setActiveSpeaker(participant.role.id);
     startStreaming(participant.role.title);
+
+    // Create abort controller for this turn
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       const context = getMeetingContext();
@@ -65,9 +89,9 @@ export default function Meeting() {
         participant,
         context,
         (chunk) => appendStreamChunk(chunk),
+        controller.signal,
       );
 
-      // Streaming done — add final message to dialogue
       endStreaming();
       addDialogue({
         speaker: participant.role.title,
@@ -76,6 +100,21 @@ export default function Meeting() {
       });
       setTurnIndex((prev) => prev + 1);
     } catch (error) {
+      // If aborted by user interrupt, save partial text
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        const partialText = useGameStore.getState().streamingText;
+        endStreaming();
+        if (partialText) {
+          addDialogue({
+            speaker: participant.role.title,
+            role: participant.role.title,
+            text: partialText + '...',
+          });
+        }
+        // Don't advance turnIndex — user interrupted
+        return;
+      }
+
       console.error('AI turn failed:', error);
       endStreaming();
       addDialogue({
@@ -86,8 +125,9 @@ export default function Meeting() {
       setTurnIndex((prev) => prev + 1);
     } finally {
       setLoading(false);
+      abortRef.current = null;
     }
-  }, [meetingSetup, userRole, turnIndex, getMeetingContext, addDialogue, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
+  }, [meetingSetup, userRole, turnIndex, roundSpeakers, getMeetingContext, addDialogue, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
 
   useEffect(() => {
     if (isAiTurn && meetingSetup && userRole && !isLoading) {
@@ -96,9 +136,33 @@ export default function Meeting() {
     }
   }, [isAiTurn, turnIndex, isLoading, runAiTurn, meetingSetup, userRole]);
 
-  // User send with streaming reactions
+  // Interrupt: cancel current AI stream and let user speak
+  const handleInterrupt = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    setIsAiTurn(false);
+    setLoading(false);
+    setActiveSpeaker(userRole?.id ?? null);
+  }, [setLoading, setActiveSpeaker, userRole]);
+
   const handleUserSend = useCallback(async (message: string) => {
     if (!meetingSetup || !userRole) return;
+
+    // If AI is talking, interrupt first
+    if (isAiTurn && abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+
+      // Save partial text if any
+      const partialText = useGameStore.getState().streamingText;
+      const speaker = useGameStore.getState().streamingSpeaker;
+      endStreaming();
+      if (partialText && speaker) {
+        addDialogue({ speaker, role: speaker, text: partialText + '...' });
+      }
+    }
 
     addDialogue({
       speaker: userRole.title,
@@ -114,6 +178,9 @@ export default function Meeting() {
     const reactors = aiParticipants.slice(0, Math.min(3, aiParticipants.length));
 
     for (const reactor of reactors) {
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       setActiveSpeaker(reactor.role.id);
       startStreaming(reactor.role.title);
 
@@ -124,6 +191,7 @@ export default function Meeting() {
           message,
           context,
           (chunk) => appendStreamChunk(chunk),
+          controller.signal,
         );
 
         endStreaming();
@@ -132,7 +200,15 @@ export default function Meeting() {
           role: reactor.role.title,
           text: reaction.text,
         });
-      } catch {
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          const partialText = useGameStore.getState().streamingText;
+          endStreaming();
+          if (partialText) {
+            addDialogue({ speaker: reactor.role.title, role: reactor.role.title, text: partialText + '...' });
+          }
+          break; // Stop further reactions
+        }
         endStreaming();
         addDialogue({
           speaker: reactor.role.title,
@@ -144,15 +220,25 @@ export default function Meeting() {
 
     setLoading(false);
     setIsAiTurn(false);
+    setRoundSpeakers([]);
     setActiveSpeaker(userRole.id);
-  }, [meetingSetup, userRole, addDialogue, getMeetingContext, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
+    abortRef.current = null;
+  }, [meetingSetup, userRole, isAiTurn, addDialogue, getMeetingContext, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
 
   const handleSkip = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    endStreaming();
+    setRoundSpeakers([]);
     setIsAiTurn(true);
-    setTurnIndex(0);
-  }, []);
+  }, [endStreaming]);
 
   const handleEndMeeting = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
     setSessionPhase('evaluation');
     navigate('/result');
   }, [setSessionPhase, navigate]);
@@ -160,6 +246,9 @@ export default function Meeting() {
   const mood: MeetingMood = dialogue.length > 15 ? 'heated' : dialogue.length > 8 ? 'tense' : 'calm';
 
   if (!meetingSetup || !userRole) return null;
+
+  // User can interrupt when AI is streaming
+  const canInterrupt = isAiTurn && isLoading && !!streamingSpeaker;
 
   return (
     <div className="flex flex-col h-[calc(100vh-56px)]">
@@ -173,7 +262,7 @@ export default function Meeting() {
             onClick={handleEndMeeting}
             className="px-3 py-1 bg-red-800 hover:bg-red-700 rounded text-white text-xs transition-colors"
           >
-            End Meeting
+            회의 종료
           </button>
         </div>
       </div>
@@ -186,7 +275,9 @@ export default function Meeting() {
           <UserInput
             onSend={handleUserSend}
             onSkip={handleSkip}
-            disabled={isAiTurn || isLoading}
+            onInterrupt={handleInterrupt}
+            disabled={isAiTurn && !canInterrupt}
+            canInterrupt={canInterrupt}
           />
         </div>
 
