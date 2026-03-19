@@ -19,9 +19,14 @@ export interface LlmResponse {
   tokensUsed?: number;
 }
 
+// Auto-detect server URL: use same hostname as the page, port 3001
+const defaultServerUrl = typeof window !== 'undefined'
+  ? `http://${window.location.hostname}:3001`
+  : 'http://localhost:3001';
+
 let config: LlmConfig = {
   mode: 'cli',
-  serverUrl: 'http://localhost:3001',
+  serverUrl: defaultServerUrl,
 };
 
 export function configureLlm(newConfig: Partial<LlmConfig>): void {

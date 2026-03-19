@@ -58,11 +58,18 @@ export async function generateCharacterUtterance(
     context.dialogueHistory.length,
   );
 
+  // Find the last thing the user (CEO/player) said
+  const lastUserEntry = [...context.dialogueHistory].reverse().find(
+    (d) => d.role === context.userRole.title,
+  );
+
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
-  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
-  userMessage += `자연스럽게 대화를 이어가세요.`;
+  if (lastUserEntry) {
+    userMessage += `★ ${context.userRole.title}(대표)가 방금 말함: "${lastUserEntry.text}"\n이 발언에 반응하거나 이어서 말하세요.\n\n`;
+  }
+  userMessage += `당신의 기본 입장: ${participant.initialStance}`;
 
   const response = await callLlm({
     system: systemPrompt,
@@ -138,11 +145,17 @@ export async function streamCharacterUtterance(
     context.dialogueHistory.length,
   );
 
+  const lastUserEntry = [...context.dialogueHistory].reverse().find(
+    (d) => d.role === context.userRole.title,
+  );
+
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
-  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
-  userMessage += `자연스럽게 대화를 이어가세요.`;
+  if (lastUserEntry) {
+    userMessage += `★ ${context.userRole.title}(대표)가 방금 말함: "${lastUserEntry.text}"\n이 발언에 반응하거나 이어서 말하세요.\n\n`;
+  }
+  userMessage += `당신의 기본 입장: ${participant.initialStance}`;
 
   const response = await callLlmStream(
     { system: systemPrompt, userMessage, model: 'haiku', maxTokens: 150 },

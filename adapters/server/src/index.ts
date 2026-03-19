@@ -8,7 +8,7 @@ import { apiHandler } from './api-handler';
 const app = new Hono();
 
 app.use('/*', cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5180'],
+  origin: '*',
   allowMethods: ['POST', 'GET', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'x-api-key', 'x-llm-mode'],
 }));
@@ -79,4 +79,4 @@ console.log(`LLM Proxy Server running on http://localhost:${port}`);
 console.log(`Modes: CLI (claude subprocess) | API (BYOK proxy)`);
 console.log(`Endpoints: POST /api/llm (batch) | POST /api/llm/stream (SSE)`);
 
-serve({ fetch: app.fetch, port });
+serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });
