@@ -73,7 +73,14 @@ export const useGameStore = create<GameState>()(
       setSessionPhase: (sessionPhase) => set({ sessionPhase }),
       setMeetingSetup: (meetingSetup) => set({ meetingSetup }),
       setUserRole: (userRole) => set({ userRole, sessionPhase: 'meeting_active' }),
-      addDialogue: (entry) => set((s) => ({ dialogue: [...s.dialogue, entry] })),
+      addDialogue: (entry) => set((s) => {
+        // Prevent duplicate: skip if last entry has same speaker + text
+        const last = s.dialogue[s.dialogue.length - 1];
+        if (last && last.speaker === entry.speaker && last.text === entry.text) {
+          return s;
+        }
+        return { dialogue: [...s.dialogue, entry] };
+      }),
       setLoading: (isLoading) => set({ isLoading }),
       startStreaming: (speaker) => set({ streamingText: '', streamingSpeaker: speaker }),
       appendStreamChunk: (chunk) => set((s) => ({ streamingText: s.streamingText + chunk })),

@@ -23,11 +23,10 @@ export default function Meeting() {
   } = useGameStore();
   const { activeSpeakerId, setActiveSpeaker, isMetricsPanelOpen, toggleMetricsPanel } = useUiStore();
   const [currentEvent, setCurrentEvent] = useState<{ title: string; description: string } | null>(null);
-  // If dialogue already exists (restored from persist), don't auto-start AI
-  const hasRestoredSession = dialogue.length > 0;
-  const [isAiTurn, setIsAiTurn] = useState(!hasRestoredSession);
+  const [isAiTurn, setIsAiTurn] = useState(false);
   const [turnIndex, setTurnIndex] = useState(0);
   const [roundSpeakers, setRoundSpeakers] = useState<MeetingParticipant[]>([]);
+  const hasStartedRef = useRef(false);
 
   // AbortController for cancelling current AI stream
   const abortRef = useRef<AbortController | null>(null);
@@ -58,7 +57,15 @@ export default function Meeting() {
     setTurnIndex(0);
   }, [meetingSetup, userRole]);
 
-  // Pick speakers on first render and when a new AI round starts
+  // Start first AI round on mount (only once)
+  useEffect(() => {
+    if (!hasStartedRef.current && meetingSetup && userRole && dialogue.length === 0) {
+      hasStartedRef.current = true;
+      setIsAiTurn(true);
+    }
+  }, [meetingSetup, userRole, dialogue.length]);
+
+  // Pick speakers when a new AI round starts
   useEffect(() => {
     if (isAiTurn && roundSpeakers.length === 0 && meetingSetup && userRole) {
       pickNewSpeakers();
