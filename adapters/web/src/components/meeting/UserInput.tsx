@@ -42,7 +42,7 @@ export default function UserInput({ onSend, onSkip, onInterrupt, disabled, canIn
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && text.trim()) {
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing && text.trim()) {
               handleSend();
             }
           }}

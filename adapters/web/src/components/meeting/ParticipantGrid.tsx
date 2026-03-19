@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { useUiStore } from '../../stores/uiStore';
+import type { MeetingParticipant } from '@startup-meeting/types';
 import ParticipantCard from './ParticipantCard';
+import ParticipantModal from './ParticipantModal';
 
 interface Props {
   typingId: string | null;
@@ -10,6 +13,7 @@ export default function ParticipantGrid({ typingId }: Props) {
   const meetingSetup = useGameStore((s) => s.meetingSetup);
   const userRole = useGameStore((s) => s.userRole);
   const activeSpeakerId = useUiStore((s) => s.activeSpeakerId);
+  const [selectedParticipant, setSelectedParticipant] = useState<{ participant: MeetingParticipant; isUser: boolean } | null>(null);
 
   if (!meetingSetup) return null;
 
@@ -27,6 +31,7 @@ export default function ParticipantGrid({ typingId }: Props) {
             isSpeaking={activeSpeakerId === participant.role.id}
             isTyping={typingId === participant.role.id}
             isUser={false}
+            onSelect={(p) => setSelectedParticipant({ participant: p, isUser: false })}
           />
         ))}
       </div>
@@ -42,9 +47,16 @@ export default function ParticipantGrid({ typingId }: Props) {
             isSpeaking={activeSpeakerId === userRole.id}
             isTyping={false}
             isUser={true}
+            onSelect={(p) => setSelectedParticipant({ participant: p, isUser: true })}
           />
         </div>
       )}
+
+      <ParticipantModal
+        participant={selectedParticipant?.participant ?? null}
+        isUser={selectedParticipant?.isUser ?? false}
+        onClose={() => setSelectedParticipant(null)}
+      />
     </div>
   );
 }

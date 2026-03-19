@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMeetingHistory } from '../stores/gameStore';
+import { getMeetingHistory, deleteMeetingHistory } from '../stores/gameStore';
 import type { SavedMeeting } from '../stores/gameStore';
 
 export default function History() {
   const navigate = useNavigate();
-  const meetings = getMeetingHistory();
+  const [meetings, setMeetings] = useState<SavedMeeting[]>(getMeetingHistory);
   const [selected, setSelected] = useState<SavedMeeting | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+
+  const handleDelete = useCallback((id: string) => {
+    deleteMeetingHistory(id);
+    setMeetings(getMeetingHistory());
+    if (selected?.id === id) setSelected(null);
+    setDeleteTarget(null);
+  }, [selected]);
 
   if (meetings.length === 0) {
     return (
@@ -100,19 +108,48 @@ export default function History() {
       <h2 className="text-xl font-bold mb-6">지난 회의</h2>
       <div className="space-y-3">
         {[...meetings].reverse().map((meeting) => (
-          <button
-            key={meeting.id}
-            onClick={() => setSelected(meeting)}
-            className="w-full text-left p-4 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center gap-4 transition-colors"
-          >
-            <div className="flex-1 min-w-0">
-              <div className="font-semibold truncate">{meeting.topic}</div>
-              <div className="text-xs text-gray-400">
-                {meeting.rolePlayed} | {new Date(meeting.date).toLocaleDateString()} | {meeting.dialogue.length}턴
+          <div key={meeting.id} className="relative group">
+            <button
+              onClick={() => setSelected(meeting)}
+              className="w-full text-left p-4 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center gap-4 transition-colors"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold truncate">{meeting.topic}</div>
+                <div className="text-xs text-gray-400">
+                  {meeting.rolePlayed} | {new Date(meeting.date).toLocaleDateString()} | {meeting.dialogue.length}턴
+                </div>
               </div>
-            </div>
-            <div className="text-gray-500">→</div>
-          </button>
+              <div className="text-gray-500">→</div>
+            </button>
+
+            {/* Delete button */}
+            {deleteTarget === meeting.id ? (
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                <button
+                  onClick={() => handleDelete(meeting.id)}
+                  className="px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-xs text-white transition-colors"
+                >
+                  확인
+                </button>
+                <button
+                  onClick={() => setDeleteTarget(null)}
+                  className="px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded text-xs text-white transition-colors"
+                >
+                  취소
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={(e) => { e.stopPropagation(); setDeleteTarget(meeting.id); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-500 hover:text-red-400 transition-all"
+                title="삭제"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            )}
+          </div>
         ))}
       </div>
       <div className="mt-6 text-center">

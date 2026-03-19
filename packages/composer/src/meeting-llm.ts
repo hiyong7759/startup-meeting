@@ -9,6 +9,7 @@ export interface MeetingContext {
   dialogueHistory: DialogueEntry[];
   currentEvent?: string;
   userRole: Role;
+  topicContext?: string; // user's context answers summarized
 }
 
 export interface DialogueEntry {
@@ -26,12 +27,8 @@ export function resetCharacterSessions(): void {
 }
 
 // Build the full history from this character's perspective
-// They see ALL dialogue (not just their own), building up context each turn
 function buildFullHistory(characterId: string, allDialogue: DialogueEntry[]): string {
   if (allDialogue.length === 0) return '';
-
-  // Give full history, not just last 8
-  // But cap at ~30 to avoid token explosion
   const relevant = allDialogue.slice(-30);
   return relevant.map((d) => `${d.speaker}: ${d.text}`).join('\n');
 }
@@ -45,7 +42,7 @@ export async function generateCharacterUtterance(
   participant: MeetingParticipant,
   context: MeetingContext,
 ): Promise<CharacterUtterance> {
-  const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const systemPrompt = buildCharacterSystemPrompt(participant.role, context.agenda);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
   const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
@@ -58,24 +55,25 @@ export async function generateCharacterUtterance(
     context.dialogueHistory.length,
   );
 
-  // Find the last thing the user (CEO/player) said
   const lastUserEntry = [...context.dialogueHistory].reverse().find(
     (d) => d.role === context.userRole.title,
   );
 
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
+  if (context.topicContext) userMessage += `배경 맥락:\n${context.topicContext}\n\n`;
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
   if (lastUserEntry) {
     userMessage += `★ ${context.userRole.title}(대표)가 방금 말함: "${lastUserEntry.text}"\n이 발언에 반응하거나 이어서 말하세요.\n\n`;
   }
-  userMessage += `당신의 기본 입장: ${participant.initialStance}`;
+  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
+  userMessage += `[지시] ${turnPrompt}`;
 
   const response = await callLlm({
     system: systemPrompt,
     userMessage,
-    model: 'haiku',
-    maxTokens: 150,
+    model: 'sonnet',
+    maxTokens: 300,
   });
 
   return {
@@ -92,7 +90,7 @@ export async function generateReactionToUser(
   userMessage: string,
   context: MeetingContext,
 ): Promise<CharacterUtterance> {
-  const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const systemPrompt = buildCharacterSystemPrompt(participant.role, context.agenda);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
 
   const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
@@ -113,8 +111,8 @@ export async function generateReactionToUser(
   const response = await callLlm({
     system: systemPrompt,
     userMessage: prompt,
-    model: 'haiku',
-    maxTokens: 150,
+    model: 'sonnet',
+    maxTokens: 300,
   });
 
   return {
@@ -132,7 +130,7 @@ export async function streamCharacterUtterance(
   onChunk: (chunk: string) => void,
   signal?: AbortSignal,
 ): Promise<CharacterUtterance> {
-  const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const systemPrompt = buildCharacterSystemPrompt(participant.role, context.agenda);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
   const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
@@ -150,15 +148,17 @@ export async function streamCharacterUtterance(
   );
 
   let userMessage = `회의 안건: ${context.agenda.title}\n${context.agenda.description}\n\n`;
+  if (context.topicContext) userMessage += `배경 맥락:\n${context.topicContext}\n\n`;
   if (historyText) userMessage += `지금까지 대화:\n${historyText}\n\n`;
   if (context.currentEvent) userMessage += `방금 발생한 이벤트: ${context.currentEvent}\n\n`;
   if (lastUserEntry) {
     userMessage += `★ ${context.userRole.title}(대표)가 방금 말함: "${lastUserEntry.text}"\n이 발언에 반응하거나 이어서 말하세요.\n\n`;
   }
-  userMessage += `당신의 기본 입장: ${participant.initialStance}`;
+  userMessage += `당신의 기본 입장: ${participant.initialStance}\n\n`;
+  userMessage += `[지시] ${turnPrompt}`;
 
   const response = await callLlmStream(
-    { system: systemPrompt, userMessage, model: 'haiku', maxTokens: 150 },
+    { system: systemPrompt, userMessage, model: 'sonnet', maxTokens: 300 },
     onChunk,
     signal,
   );
@@ -179,7 +179,7 @@ export async function streamReactionToUser(
   onChunk: (chunk: string) => void,
   signal?: AbortSignal,
 ): Promise<CharacterUtterance> {
-  const systemPrompt = buildCharacterSystemPrompt(participant.role);
+  const systemPrompt = buildCharacterSystemPrompt(participant.role, context.agenda);
   const historyText = buildFullHistory(participant.role.id, context.dialogueHistory);
   const { speaker: lastSpeaker, text: lastText } = getLastSpeakerInfo(context.dialogueHistory);
 
@@ -198,7 +198,7 @@ export async function streamReactionToUser(
   prompt += `[지시] ${turnPrompt}`;
 
   const response = await callLlmStream(
-    { system: systemPrompt, userMessage: prompt, model: 'haiku', maxTokens: 150 },
+    { system: systemPrompt, userMessage: prompt, model: 'sonnet', maxTokens: 300 },
     onChunk,
     signal,
   );
@@ -213,19 +213,15 @@ export async function streamReactionToUser(
 }
 
 // Detect terms that might need explanation
-// Returns array of {term, startIndex, endIndex}
 export function detectTerms(text: string): Array<{ term: string; start: number; end: number }> {
   const terms: Array<{ term: string; start: number; end: number }> = [];
   const patterns = [
-    // Business/finance
     /MRR|ARR|ARPU|CAC|LTV|ROI|PMF|TAM|SAM|SOM|EBITDA|P&L|BEP|GM|NPS/g,
     /런웨이|번레이트|시리즈[A-Z]|프리[A-Z]|벨류에이션|엑시트|IPO|M&A/g,
     /유닛이코노믹스|코호트|리텐션|퍼널|컨버전|온보딩|DAU|MAU|WAU/g,
-    // Tech
     /MSA|모놀리식|마이크로서비스|CI\/CD|DevOps|SRE|SLA|SLO|SLI/g,
     /스케일아웃|스케일업|레이턴시|쓰루풋|카나리|블루그린|롤백/g,
     /OKR|KPI|스프린트|애자일|스크럼|칸반|레트로|스탠드업/g,
-    // Marketing
     /CPC|CPM|CPA|CPL|ROAS|CTR|CVR|SEO|SEM|퍼포먼스마케팅/g,
     /리퍼럴|바이럴|오가닉|페이드|브랜딩|GTM|PLG/g,
   ];
@@ -241,7 +237,6 @@ export function detectTerms(text: string): Array<{ term: string; start: number; 
     }
   }
 
-  // Deduplicate and sort by position
   const seen = new Set<string>();
   return terms
     .filter((t) => {
@@ -257,8 +252,8 @@ export async function explainTerm(term: string, meetingContext: string): Promise
   const response = await callLlm({
     system: '비즈니스/기술 용어를 설명하는 전문가입니다. 짧고 쉽게 설명하세요.',
     userMessage: `"${term}"을(를) 한국어로 2-3문장으로 쉽게 설명해주세요.\n\n회의 맥락: ${meetingContext}`,
-    model: 'haiku',
-    maxTokens: 150,
+    model: 'sonnet',
+    maxTokens: 300,
   });
   return response.text.trim();
 }

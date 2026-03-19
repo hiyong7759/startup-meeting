@@ -57,6 +57,11 @@ export function getMeetingHistory(): SavedMeeting[] {
   return loadMeetingHistory();
 }
 
+export function deleteMeetingHistory(id: string): void {
+  const history = loadMeetingHistory().filter((m) => m.id !== id);
+  localStorage.setItem('startup-meeting-history', JSON.stringify(history));
+}
+
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({

@@ -41,6 +41,7 @@ export async function generateMeetingSetup(
     "title": "안건 제목",
     "description": "안건 설명 (2-3문장)",
     "category": "카테고리",
+    "meetingStyle": "brainstorming | decision | review | planning | retrospective | crisis | general",
     "keyQuestions": ["핵심 질문 1", "핵심 질문 2", "핵심 질문 3"],
     "possibleOutcomes": ["가능한 결과 1", "가능한 결과 2"]
   },

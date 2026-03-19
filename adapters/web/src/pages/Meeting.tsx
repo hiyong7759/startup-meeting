@@ -26,7 +26,9 @@ export default function Meeting() {
   const [isAiTurn, setIsAiTurn] = useState(false);
   const [turnIndex, setTurnIndex] = useState(0);
   const [roundSpeakers, setRoundSpeakers] = useState<MeetingParticipant[]>([]);
+  const [autoProgress, setAutoProgress] = useState(false);
   const hasStartedRef = useRef(false);
+  const MAX_TURNS = 50;
 
   // AbortController for cancelling current AI stream
   const abortRef = useRef<AbortController | null>(null);
@@ -37,13 +39,19 @@ export default function Meeting() {
     }
   }, [meetingSetup, userRole, navigate]);
 
+  const topicContext = meetingSetup?.context
+    ?.filter((q) => q.answer)
+    .map((q) => `Q: ${q.question}\nA: ${q.answer}`)
+    .join('\n') ?? '';
+
   const getMeetingContext = useCallback((): MeetingContext => ({
     agenda: meetingSetup!.agenda,
     participants: meetingSetup!.participants,
     dialogueHistory: dialogue,
     currentEvent: currentEvent?.description,
     userRole: userRole!,
-  }), [meetingSetup, dialogue, currentEvent, userRole]);
+    topicContext: topicContext || undefined,
+  }), [meetingSetup, dialogue, currentEvent, userRole, topicContext]);
 
   // Pick speakers once at the start of each AI round
   const pickNewSpeakers = useCallback(() => {
@@ -76,9 +84,15 @@ export default function Meeting() {
     if (!meetingSetup || !userRole || roundSpeakers.length === 0) return;
 
     if (turnIndex >= roundSpeakers.length) {
-      setIsAiTurn(false);
-      setRoundSpeakers([]);
-      setActiveSpeaker(userRole.id);
+      if (autoProgress) {
+        // Auto-continue: pick new speakers and keep going
+        setRoundSpeakers([]);
+      } else {
+        // Stop and wait for user
+        setIsAiTurn(false);
+        setRoundSpeakers([]);
+        setActiveSpeaker(userRole.id);
+      }
       return;
     }
 
@@ -135,7 +149,13 @@ export default function Meeting() {
       setLoading(false);
       abortRef.current = null;
     }
-  }, [meetingSetup, userRole, turnIndex, roundSpeakers, getMeetingContext, addDialogue, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
+  }, [meetingSetup, userRole, turnIndex, roundSpeakers, getMeetingContext, addDialogue, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming, autoProgress]);
+
+  useEffect(() => {
+    if (dialogue.length >= MAX_TURNS && autoProgress) {
+      setAutoProgress(false);
+    }
+  }, [dialogue.length, autoProgress]);
 
   useEffect(() => {
     if (isAiTurn && meetingSetup && userRole && !isLoading) {
@@ -227,11 +247,13 @@ export default function Meeting() {
     }
 
     setLoading(false);
-    setIsAiTurn(false);
     setRoundSpeakers([]);
-    setActiveSpeaker(userRole.id);
+    if (!autoProgress) {
+      setIsAiTurn(false);
+      setActiveSpeaker(userRole.id);
+    }
     abortRef.current = null;
-  }, [meetingSetup, userRole, isAiTurn, addDialogue, getMeetingContext, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming]);
+  }, [meetingSetup, userRole, isAiTurn, addDialogue, getMeetingContext, setActiveSpeaker, setLoading, startStreaming, appendStreamChunk, endStreaming, autoProgress]);
 
   const handleSkip = useCallback(() => {
     if (abortRef.current) {
@@ -256,8 +278,8 @@ export default function Meeting() {
 
   if (!meetingSetup || !userRole) return null;
 
-  // User can interrupt when AI is streaming
-  const canInterrupt = isAiTurn && isLoading && !!streamingSpeaker;
+  // User can always type — meeting runs continuously
+  const canInterrupt = isLoading && !!streamingSpeaker;
 
   return (
     <div className="flex flex-col h-[calc(100vh-56px)]">
@@ -266,7 +288,17 @@ export default function Meeting() {
           {meetingSetup.agenda.title}
         </div>
         <div className="flex items-center gap-3 text-xs text-gray-400">
-          <span>Turn {dialogue.length}</span>
+          <span>Turn {dialogue.length}/{MAX_TURNS}</span>
+          <button
+            onClick={() => setAutoProgress((v) => !v)}
+            className={`px-3 py-1 rounded text-xs transition-colors ${
+              autoProgress
+                ? 'bg-green-800 hover:bg-green-700 text-green-200'
+                : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+            }`}
+          >
+            자동진행 {autoProgress ? 'ON' : 'OFF'}
+          </button>
           <button
             onClick={handleEndMeeting}
             className="px-3 py-1 bg-red-800 hover:bg-red-700 rounded text-white text-xs transition-colors"
@@ -285,7 +317,7 @@ export default function Meeting() {
             onSend={handleUserSend}
             onSkip={handleSkip}
             onInterrupt={handleInterrupt}
-            disabled={isAiTurn && !canInterrupt}
+            disabled={!autoProgress && isAiTurn && !canInterrupt}
             canInterrupt={canInterrupt}
           />
         </div>
