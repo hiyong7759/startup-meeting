@@ -94,16 +94,23 @@ export const useGameStore = create<GameState>()(
         });
       },
 
-      reset: () => set({
-        sessionPhase: 'idle',
-        topic: '',
-        meetingSetup: null,
-        userRole: null,
-        dialogue: [],
-        isLoading: false,
-        streamingText: '',
-        streamingSpeaker: null,
-      }),
+      reset: () => {
+        // Auto-save before clearing
+        const { topic, dialogue } = get();
+        if (topic && dialogue.length > 0) {
+          get().saveMeeting();
+        }
+        set({
+          sessionPhase: 'idle',
+          topic: '',
+          meetingSetup: null,
+          userRole: null,
+          dialogue: [],
+          isLoading: false,
+          streamingText: '',
+          streamingSpeaker: null,
+        });
+      },
     }),
     {
       name: 'startup-meeting-game',
