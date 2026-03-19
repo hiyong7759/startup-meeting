@@ -23,9 +23,10 @@ export default function Meeting() {
   } = useGameStore();
   const { activeSpeakerId, setActiveSpeaker, isMetricsPanelOpen, toggleMetricsPanel } = useUiStore();
   const [currentEvent, setCurrentEvent] = useState<{ title: string; description: string } | null>(null);
-  const [isAiTurn, setIsAiTurn] = useState(true);
+  // If dialogue already exists (restored from persist), don't auto-start AI
+  const hasRestoredSession = dialogue.length > 0;
+  const [isAiTurn, setIsAiTurn] = useState(!hasRestoredSession);
   const [turnIndex, setTurnIndex] = useState(0);
-  // Speakers for current round — selected once, not re-shuffled
   const [roundSpeakers, setRoundSpeakers] = useState<MeetingParticipant[]>([]);
 
   // AbortController for cancelling current AI stream
