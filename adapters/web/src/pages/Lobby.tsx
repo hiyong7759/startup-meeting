@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
 
@@ -12,6 +12,12 @@ export default function Lobby() {
   const navigate = useNavigate();
   const [topic, setTopic] = useState('');
   const setMeetingTopic = useGameStore((s) => s.setTopic);
+  const reset = useGameStore((s) => s.reset);
+
+  // Entering lobby = starting fresh. Save + clear previous session.
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   const handleSubmit = () => {
     if (!topic.trim()) return;
