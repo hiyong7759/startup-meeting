@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
 
+const QUICK_TOPICS = [
+  { label: '신제품 기획', topic: '새로운 제품/서비스 아이디어를 기획하고 검증하는 회의', color: 'bg-blue-800 hover:bg-blue-700' },
+  { label: '브레인스토밍', topic: '자유롭게 아이디어를 발산하고 가능성을 탐색하는 브레인스토밍', color: 'bg-teal-800 hover:bg-teal-700' },
+  { label: '문제 해결', topic: '현재 직면한 문제의 원인을 분석하고 해결 방안을 논의하는 회의', color: 'bg-orange-800 hover:bg-orange-700' },
+];
+
 export default function Lobby() {
   const navigate = useNavigate();
   const [topic, setTopic] = useState('');
@@ -10,6 +16,11 @@ export default function Lobby() {
   const handleSubmit = () => {
     if (!topic.trim()) return;
     setMeetingTopic(topic.trim());
+    navigate('/setup');
+  };
+
+  const handleQuickTopic = (topicText: string) => {
+    setMeetingTopic(topicText);
     navigate('/setup');
   };
 
@@ -22,6 +33,7 @@ export default function Lobby() {
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-56px)] gap-8 p-8">
       <h2 className="text-2xl font-bold">오늘의 회의</h2>
 
+      {/* Direct input */}
       <div className="w-full max-w-md">
         <label className="block text-sm text-gray-400 mb-2">주제 직접 입력:</label>
         <div className="flex gap-2">
@@ -43,8 +55,25 @@ export default function Lobby() {
         </div>
       </div>
 
+      {/* Quick topics */}
+      <div className="w-full max-w-md">
+        <label className="block text-sm text-gray-400 mb-2">빠른 시작:</label>
+        <div className="flex gap-2">
+          {QUICK_TOPICS.map((qt) => (
+            <button
+              key={qt.label}
+              onClick={() => handleQuickTopic(qt.topic)}
+              className={`flex-1 px-4 py-3 ${qt.color} rounded-lg text-sm font-semibold transition-colors`}
+            >
+              {qt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="text-gray-500 text-sm">── 또는 뽑기 ──</div>
 
+      {/* Gacha by rarity */}
       <div className="flex gap-3">
         <button onClick={() => handleGacha('common')} className="px-6 py-3 bg-green-800 hover:bg-green-700 rounded-lg transition-colors">
           일상

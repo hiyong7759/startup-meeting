@@ -18,7 +18,7 @@ export default function Meeting() {
   const {
     meetingSetup, userRole, dialogue, addDialogue,
     setSessionPhase, isLoading, setLoading,
-    startStreaming, appendStreamChunk, endStreaming,
+    startStreaming, appendStreamChunk, endStreaming, saveMeeting,
     streamingText, streamingSpeaker,
   } = useGameStore();
   const { activeSpeakerId, setActiveSpeaker, isMetricsPanelOpen, toggleMetricsPanel } = useUiStore();
@@ -240,9 +240,10 @@ export default function Meeting() {
     if (abortRef.current) {
       abortRef.current.abort();
     }
+    saveMeeting(); // Save dialogue to history before leaving
     setSessionPhase('evaluation');
     navigate('/result');
-  }, [setSessionPhase, navigate]);
+  }, [saveMeeting, setSessionPhase, navigate]);
 
   const mood: MeetingMood = dialogue.length > 15 ? 'heated' : dialogue.length > 8 ? 'tense' : 'calm';
 

@@ -4,6 +4,16 @@ import type { MeetingSetup, SessionPhase } from '@startup-meeting/types';
 import type { Role } from '@startup-meeting/types';
 import type { DialogueEntry } from '@startup-meeting/composer';
 
+// Saved meeting record (stored separately in localStorage)
+export interface SavedMeeting {
+  id: string;
+  date: string;
+  topic: string;
+  rolePlayed: string;
+  dialogue: DialogueEntry[];
+  participantNames: string[];
+}
+
 interface GameState {
   sessionPhase: SessionPhase;
   topic: string;
@@ -23,12 +33,33 @@ interface GameState {
   appendStreamChunk: (chunk: string) => void;
   startStreaming: (speaker: string) => void;
   endStreaming: () => void;
+  saveMeeting: () => void;  // Save current meeting to history
   reset: () => void;
+}
+
+// localStorage helpers for meeting history
+function loadMeetingHistory(): SavedMeeting[] {
+  try {
+    const raw = localStorage.getItem('startup-meeting-history');
+    return raw ? JSON.parse(raw) as SavedMeeting[] : [];
+  } catch { return []; }
+}
+
+function appendMeetingHistory(meeting: SavedMeeting): void {
+  const history = loadMeetingHistory();
+  history.push(meeting);
+  // Keep last 50 meetings
+  if (history.length > 50) history.shift();
+  localStorage.setItem('startup-meeting-history', JSON.stringify(history));
+}
+
+export function getMeetingHistory(): SavedMeeting[] {
+  return loadMeetingHistory();
 }
 
 export const useGameStore = create<GameState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       sessionPhase: 'idle',
       topic: '',
       meetingSetup: null,
@@ -47,6 +78,22 @@ export const useGameStore = create<GameState>()(
       startStreaming: (speaker) => set({ streamingText: '', streamingSpeaker: speaker }),
       appendStreamChunk: (chunk) => set((s) => ({ streamingText: s.streamingText + chunk })),
       endStreaming: () => set({ streamingText: '', streamingSpeaker: null }),
+
+      // Save current meeting dialogue to persistent history
+      saveMeeting: () => {
+        const { topic, userRole, dialogue, meetingSetup } = get();
+        if (!topic || dialogue.length === 0) return;
+
+        appendMeetingHistory({
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+          topic,
+          rolePlayed: userRole?.title ?? '',
+          dialogue,
+          participantNames: meetingSetup?.participants.map((p) => p.role.title) ?? [],
+        });
+      },
+
       reset: () => set({
         sessionPhase: 'idle',
         topic: '',
@@ -60,7 +107,6 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'startup-meeting-game',
-      // Don't persist transient state
       partialize: (state) => ({
         sessionPhase: state.sessionPhase,
         topic: state.topic,
